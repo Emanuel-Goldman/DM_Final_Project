@@ -1,7 +1,5 @@
-```text
-
-### **Data Management Final Project**  
-This project provides a backend API for ranking data using a **FastAPI** server. The API allows sorting data based on various ranking methods and retrieving ranking stability.  
+# **Data Management Final Project**  
+This project provides a backend API for ranking data using a **FastAPI** server. The API allows sorting data based on various ranking methods and retrieving ranking stability. The system applies methods from the paper **"On Obtaining Stable Ranking"**, utilizing the **Ray Sweeping algorithm** and a **randomized Monte Carlo approach** to compute stable rankings based on constraints and scoring functions.
 
 ---
 
@@ -36,7 +34,7 @@ cd DM_FINAL_PROJECT/Server
 ```bash
 python -m venv venv
 source venv/bin/activate  # On macOS/Linux
-venv\Scripts\activate      # On Windows
+venv\Scripts\activate     # On Windows
 ```
 
 ### **3. Install Dependencies**
@@ -69,14 +67,39 @@ The API will be accessible at:
 - **Request Body:** JSON with constraints, ranking method, and column selection.  
 - **Response:** Returns ranked data with ranking function and stability.  
 
+#### **Example Request:**
+```json
+{
+    "constraints": [[1, 2, "<="], [1, 1, ">="]],
+    "method": "Ray Sweeping",
+    "columns": ["followers", "bullet_win"],
+    "num_ret_tuples": 5,
+    "num_of_rankings": 3
+}
+```
+
+#### **Example Response:**
+```json
+[
+    {
+        "Ranking": [
+            {"user_id": 15448422, "name": "Hikaru Nakamura", "Rank": 0.5756, "followers": 1.0, "bullet_win": 0.1853},
+            {"user_id": 2406471, "name": "Rogelio Jr Antonio", "Rank": 0.5217, "followers": 0.0018, "bullet_win": 1.0}
+        ],
+        "Ranking_Function": {"w1": 0.4791, "w2": 0.5208},
+        "Stability": 0.1881
+    }
+]
+```
+
 ---
 
 ## **Testing**
 Run unit tests for backend services and the server using:
-
 ```bash
 python -m unittest test_backend_services.py
-python test_server.py
+python -m unittest test_server.py
+```
 
 ---
 
@@ -84,4 +107,3 @@ python test_server.py
 - **Emanuel Goldman**  
 - **Dana Goldberg**  
 
-```
