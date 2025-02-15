@@ -1,3 +1,5 @@
+```text
+
 ### **Data Management Final Project**  
 This project provides a backend API for ranking data using a **FastAPI** server. The API allows sorting data based on various ranking methods and retrieving ranking stability.  
 
@@ -81,3 +83,5 @@ python test_server.py
 ## **Contributors**  
 - **Emanuel Goldman**  
 - **Dana Goldberg**  
+
+```
