@@ -20,6 +20,8 @@ class RankingRequest(BaseModel):
     columns: list
     num_ret_tuples: int
     num_of_rankings: int
+    num_of_samples: int = None
+    k_samples: int = None
 
 @app.post("/ranking")
 def get_ranking(data: RankingRequest):
@@ -29,7 +31,9 @@ def get_ranking(data: RankingRequest):
         data.method,
         data.columns,
         data.num_ret_tuples,
-        data.num_of_rankings
+        data.num_of_rankings,
+        data.num_of_samples,
+        data.k_samples
     )
     return result  # FastAPI will automatically convert this to JSON
 

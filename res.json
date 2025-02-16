@@ -1,0 +1,62 @@
+[
+    {
+        "Ranking": [
+            {
+                "user_id": 2406471,
+                "name": "Rogelio Jr Antonio",
+                "Rank": 0.5859780192644242,
+                "followers": 0.0018677633834181,
+                "bullet_win": 1.0
+            },
+            {
+                "user_id": 15448422,
+                "name": "Hikaru Nakamura",
+                "Rank": 0.5232460538746775,
+                "followers": 1.0,
+                "bullet_win": 0.1853190767141887
+            },
+            {
+                "user_id": 63063390,
+                "name": "ZURAB AZMAIPARASHVILI",
+                "Rank": 0.3334542972942683,
+                "followers": 0.0001237156978897,
+                "bullet_win": 0.5697216564833673
+            }
+        ],
+        "Ranking_Function": {
+            "w1": 0.4147967228661069,
+            "w2": 0.585203277133893
+        },
+        "Stability": 0.3436666666666667
+    },
+    {
+        "Ranking": [
+            {
+                "user_id": 15448422,
+                "name": "Hikaru Nakamura",
+                "Rank": 0.561343279245598,
+                "followers": 1.0,
+                "bullet_win": 0.1853190767141887
+            },
+            {
+                "user_id": 2406471,
+                "name": "Rogelio Jr Antonio",
+                "Rank": 0.5393019922684877,
+                "followers": 0.0018677633834181,
+                "bullet_win": 1.0
+            },
+            {
+                "user_id": 63063390,
+                "name": "ZURAB AZMAIPARASHVILI",
+                "Rank": 0.30681797809165995,
+                "followers": 0.0001237156978897,
+                "bullet_win": 0.5697216564833673
+            }
+        ],
+        "Ranking_Function": {
+            "w1": 0.46156009277203885,
+            "w2": 0.5384399072279611
+        },
+        "Stability": 0.15622222222222223
+    }
+]

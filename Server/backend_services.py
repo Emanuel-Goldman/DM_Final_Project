@@ -6,13 +6,20 @@ import pandas as pd
 import json
 import heapq
 from fastapi import FastAPI
+import os
+import hashlib
 
 
+file_path = os.path.join(os.path.dirname(__file__), "Data", "GM_players_statistics_cleaned.csv")
+df = pd.read_csv(file_path)
 
-df = pd.read_csv("Data/GM_players_statistics_cleaned.csv")
 
+def generate_ranking_id(ranking):
+    """Generates a unique ID for a ranking by hashing the tuple."""
+    ranking_str = ",".join(map(str, ranking))  # Convert to string
+    return hashlib.md5(ranking_str.encode()).hexdigest()  # Hash it
 
-def sort_data(constraints: list, method: str, columns: list, num_ret_tuples: int, num_of_rankings) -> tuple[pd.DataFrame, float]:
+def sort_data(constraints: list, method: str, columns: list, num_ret_tuples: int, num_of_rankings : int, num_of_smaples : int = None, k_sample=None) -> tuple[pd.DataFrame, float]:
 
     """
     Sorts the data based on the constraints and method provided.
@@ -45,10 +52,24 @@ def sort_data(constraints: list, method: str, columns: list, num_ret_tuples: int
             res.append({"Ranking":final_df_dict, "Ranking_Function":ranking_function_final, "Stability":stability})
             
 
-    
     elif method == "Randomized Rounding":
-        ranking = randomized_get_next(region_in_angles, columns)
-        res = []
+
+        if k_sample==None or k_sample>100:
+            k_sample = 100
+
+        ranking_list = randomized_get_next(region_in_angles, columns, num_of_rankings, num_ret_tuples, num_of_smaples, k_sample)
+        res =[]
+
+        for rank in ranking_list:
+            angle = rank[0]
+            stability = rank[1]
+            ranking = find_ranking(from_angle_to_vector(angle), columns)
+            ranking_function = from_angle_to_vector(angle)
+            ranking = ranking.reset_index(drop=True)
+            final_df = ranking.loc[:num_ret_tuples-1, ["user_id","name","Rank",columns[0], columns[1]]]
+            final_df_dict = final_df.to_dict(orient="records")
+            ranking_function_final = {"w1": ranking_function[0], "w2": ranking_function[1]}
+            res.append({"Ranking":final_df_dict, "Ranking_Function":ranking_function_final, "Stability":stability})
 
     else:
         raise ValueError(f"Invalid method provided - {method}, choose from 'Ray_Sweeping' or 'Randomized_Rounding'")
@@ -97,7 +118,6 @@ def calculate_exchange_ordering_angle(region_in_angles, indexes, columns):
         return None
     
 
-
 def compute_first_quadrant_angle(item_1, item_2, columns):
     delta_x = item_2[columns[0]] - item_1[columns[0]]
     delta_y = item_2[columns[1]] - item_1[columns[1]]
@@ -114,8 +134,6 @@ def compute_first_quadrant_angle(item_1, item_2, columns):
     
     return angle
     
-
-
 
 def ray_sweeping(region_in_angles : list, columns : str) -> pd.DataFrame:
 
@@ -147,23 +165,76 @@ def ray_sweeping(region_in_angles : list, columns : str) -> pd.DataFrame:
     return max_heap
 
 
-def randomized_get_next(region_in_angles : list, columns : str) -> list:
-    #TODO: Implement Randomized Rounding algorithm
-    pass
+def generate_randomized_angles(region_in_angles : list, num_of_smaples : int) -> list:
+    
+    res  = []
+    for i in range(num_of_smaples):
+        angle = np.random.uniform(region_in_angles[0], region_in_angles[1])
+        res.append(angle)
+    
+    return res
+
+
+def randomized_get_next(region_in_angles : list, columns : str, num_of_rankings : int, num_ret_tuples : int, num_of_smaples : int, k_sample : int) -> list:
+    
+    samples = generate_randomized_angles(region_in_angles, num_of_smaples)
+    ranking_counts = {}
+    ranking_angles = {}
+
+    for sample in samples:
+        ranking = find_ranking(from_angle_to_vector(sample), columns)
+        ranking = ranking.iloc[:k_sample]['user_id']
+        ranking_id = generate_ranking_id(ranking)
+
+        ranking_angles[ranking_id] = sample
+
+        # Update ranking occurrence count
+        if ranking_id in ranking_counts:
+            ranking_counts[ranking_id] += 1
+        else:
+            ranking_counts[ranking_id] = 1
+
+    # # print the ranking counts
+    # for ranking_id, count in ranking_counts.items():
+    #     print(f"Ranking {ranking_id} occurs {count} times")
+
+    # # print the ranking angles
+    # for ranking_id, angle in ranking_angles.items():
+    #     print(f"Ranking {ranking_id} has angle {angle}")
+
+    ranking_list = []
+    if num_of_rankings == None:
+        num_of_rankings = len(ranking_counts)
+    for i in range(num_of_rankings):
+        try:
+            max_ranking = max(ranking_counts, key=ranking_counts.get)
+        except ValueError:
+            break
+        angle = ranking_angles[max_ranking]
+        stability = ranking_counts[max_ranking] / num_of_smaples
+        rank = [angle, stability]
+        ranking_list.append(rank)
+        del ranking_counts[max_ranking]
+
+    #print the ranking list
+    # for rank in ranking_list:
+    #     print(f"Ranking {rank[0]} has stability {rank[1]}")
+
+    return ranking_list
+        
 
 
 def find_ranking(waights: list, columns: list) -> pd.DataFrame:
     if len(waights) != 2:
         raise ValueError("Invalid number of weights provided")
     
-    if waights[0] + waights[1] != 1:
-        raise ValueError("Weights should sum to 1")
+    if not math.isclose(waights[0] + waights[1], 1, rel_tol=1e-6):
+        raise ValueError("Weights should sum to approximately 1")
     
     df_ranked = df.copy()
     df_ranked["Rank"] = df_ranked[columns[0]]*waights[0] + df_ranked[columns[1]]*waights[1]
     df_ranked = df_ranked.sort_values(by="Rank", ascending=False)
     return df_ranked
-
 
 
 def find_feasible_angle_region(constraints):
@@ -189,7 +260,6 @@ def find_feasible_angle_region(constraints):
     return theta_min, theta_max
 
     
-
 def from_angle_to_vector(angle):
     w_1 = math.cos(math.radians(angle))
     w_2 = math.sin(math.radians(angle))
@@ -198,14 +268,14 @@ def from_angle_to_vector(angle):
     total = w_1 + w_2
     return [w_1 / total, w_2 / total]
 
+
 def get_columns_names():
     return df.columns.tolist()
 
 
-
 def main():
 
-    res = sort_data([(1,2,"<="),(1, 1, ">=")], "Ray Sweeping", ["followers", "bullet_win"], 5, 2)
+    res = sort_data([(1,2,"<="),(1, 1, ">=")], "Randomized Rounding", ["followers", "bullet_win"], num_of_rankings=2, num_ret_tuples=3, num_of_smaples=9000, k_sample=40)
     # print(res)
 
     # print(f"Stability score: {res[1]}")

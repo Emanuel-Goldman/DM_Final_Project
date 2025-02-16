@@ -73,8 +73,8 @@ The API will be accessible at:
     "constraints": [[1, 2, "<="], [1, 1, ">="]],
     "method": "Ray Sweeping",
     "columns": ["followers", "bullet_win"],
-    "num_ret_tuples": 5,
-    "num_of_rankings": 3
+    "num_ret_tuples": 2,
+    "num_of_rankings": 1
 }
 ```
 
