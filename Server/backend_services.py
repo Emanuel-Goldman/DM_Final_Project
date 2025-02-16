@@ -84,12 +84,35 @@ def sort_data(constraints: list, method: str, columns: list, num_ret_tuples: int
     return res
 
 
-def get_ranking_stability(range, columns):
-    """
-    Returns the stability score of the ranking function.
-    """
-    # TODO: Implement stability score calculation
-    return 1.0
+def get_ranking_stability(W1, W2, columns):
+
+    angle = find_angle(W1, W2)
+
+    if angle < 0 or angle > 90:
+        raise ValueError("Invalid angle provided")
+
+    ranking = find_ranking(from_angle_to_vector(angle), columns)
+    print(f"We have a ranking with length {len(ranking)} and the angle is {angle}")
+
+    max_angle = 90
+    min_angle = 0
+
+    for i in range(len(ranking)-1):
+        
+        exch_angle = calculate_exchange_ordering_angle([min_angle, max_angle], [i, i+1], columns)
+        if exch_angle is not None:
+            print(f"Angle between {i} and {i+1} is {exch_angle}")
+            if exch_angle < angle and exch_angle > min_angle:
+                min_angle = exch_angle
+            elif exch_angle > angle and exch_angle < max_angle:
+                max_angle = exch_angle
+
+    print(f"Mimimum angle is {min_angle} and maximum angle is {max_angle}")
+
+    res = (max_angle - min_angle)/ 90
+    return {'stability': res}
+
+    
     
 
 def calculate_exchange_ordering_angle(region_in_angles, indexes, columns):
@@ -165,6 +188,7 @@ def ray_sweeping(region_in_angles : list, columns : str) -> pd.DataFrame:
     return max_heap
 
 
+
 def generate_randomized_angles(region_in_angles : list, num_of_smaples : int) -> list:
     
     res  = []
@@ -236,14 +260,26 @@ def find_ranking(waights: list, columns: list) -> pd.DataFrame:
     df_ranked = df_ranked.sort_values(by="Rank", ascending=False)
     return df_ranked
 
+# def find_angle(a, b):
+#     return np.degrees(np.arctan2(b, a))
+
+
+def find_angle(W1, W2):
+    print(f"DEBUG: Inside find_angle, W1={W1}, W2={W2}, Type(W1)={type(W1)}, Type(W2)={type(W2)}")
+
+    assert isinstance(W1, (int, float)), f"Error: W1 is {type(W1)}, expected int/float"
+    assert isinstance(W2, (int, float)), f"Error: W2 is {type(W2)}, expected int/float"
+
+    W1 = float(W1)  # Explicit conversion
+    W2 = float(W2)
+
+    return np.degrees(np.arctan2(W2, W1))
+
+
 
 def find_feasible_angle_region(constraints):
     """Finds the intersection of angle constraints given as (a, b, sign).
     """
-
-    def find_angle(a, b):
-        return np.degrees(np.arctan2(b, a))
-
     theta_min = 0
     theta_max = 90
 
@@ -273,13 +309,15 @@ def get_columns_names():
     return df.columns.tolist()
 
 
-def main():
+# def main():
 
-    res = sort_data([(1,2,"<="),(1, 1, ">=")], "Randomized Rounding", ["followers", "bullet_win"], num_of_rankings=2, num_ret_tuples=3, num_of_smaples=9000, k_sample=40)
+    # res = sort_data([(1,2,"<="),(1, 1, ">=")], "Randomized Rounding", ["followers", "bullet_win"], num_of_rankings=2, num_ret_tuples=3, num_of_smaples=9000, k_sample=40)
     # print(res)
 
     # print(f"Stability score: {res[1]}")
+    # stability = get_ranking_stability(0.25, 0.75, ["followers", "bullet_win"])
+    # print(f"Stability score: {stability}")
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+    # main()
