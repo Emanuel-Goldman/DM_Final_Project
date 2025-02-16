@@ -1,5 +1,9 @@
 # **Data Management Final Project**  
-This project provides a backend API for ranking data using a **FastAPI** server. The API allows sorting data based on various ranking methods and retrieving ranking stability. The system applies methods from the paper **"On Obtaining Stable Ranking"**, utilizing the **Ray Sweeping algorithm** and a **randomized Monte Carlo approach** to compute stable rankings based on constraints and scoring functions.
+This project provides a backend API for ranking data using a **FastAPI** server. 
+The API allows sorting data based on various ranking methods and retrieving ranking stability. 
+The system applies methods from the paper **"On Obtaining Stable Ranking"**, 
+utilizing the **Ray Sweeping algorithm** and a **randomized Monte Carlo approach** 
+to compute stable rankings based on constraints and scoring functions.
 
 ---
 
@@ -62,20 +66,49 @@ The API will be accessible at:
 - **Endpoint:** `GET /columns`  
 - **Response:** Returns column names from the dataset.  
 
+#### **Example Usage:**
+```python
+import requests
+response = requests.get("http://127.0.0.1:8000/columns")
+print(response.json())
+```
+
 ### **2. Get Ranking**
 - **Endpoint:** `POST /ranking`  
 - **Request Body:** JSON with constraints, ranking method, and column selection.  
 - **Response:** Returns ranked data with ranking function and stability.  
 
-#### **Example Request:**
-```json
-{
+#### **Example Request Using Ray Sweeping Method:**
+```python
+import requests
+
+data = {
     "constraints": [[1, 2, "<="], [1, 1, ">="]],
     "method": "Ray Sweeping",
-    "columns": ["followers", "bullet_win"],
-    "num_ret_tuples": 2,
+    "columns": ["rapid_win", "bullet_win"],
+    "num_ret_tuples": 1,
     "num_of_rankings": 1
 }
+
+response = requests.post("http://127.0.0.1:8000/ranking", json=data)
+print(response.json())
+```
+
+#### **Example Request Using Randomized Rounding Method:**
+```python
+import requests
+
+data = {
+    "constraints": [[1, 2, "<="], [1, 1, ">="]],
+    "method": "Randomized Rounding",
+    "columns": ["rapid_win", "bullet_win"],
+    "num_ret_tuples": 3,
+    "num_of_rankings": 2,
+    "num_of_samples": 1000
+}
+
+response = requests.post("http://127.0.0.1:8000/ranking", json=data)
+print(response.json())
 ```
 
 #### **Example Response:**
@@ -94,16 +127,28 @@ The API will be accessible at:
 
 ---
 
-## **Testing**
-Run unit tests for backend services and the server using:
-```bash
-python -m unittest test_backend_services.py
-python -m unittest test_server.py
+### **3. Get Stability Score**
+- **Endpoint:** `POST /stability`  
+- **Request Body:** JSON with column names and weight parameters `W1` and `W2`.
+- **Response:** Returns the stability score of the ranking.
+
+#### **Example Request:**
+```python
+import requests
+
+data = {
+    "columns": ["rapid_win", "bullet_win"],
+    "W1": 0.2,  # Weight for the first ranking factor
+    "W2": 0.8   # Weight for the second ranking factor
+}
+
+response = requests.post("http://127.0.0.1:8000/stability", json=data)
+print(response.json())
 ```
 
 ---
 
 ## **Contributors**  
 - **Emanuel Goldman**  
-- **Dana Goldberg**  
+- **Dana Goldberg**
 
