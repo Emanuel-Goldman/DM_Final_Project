@@ -72,5 +72,11 @@ def get_stability(data: StabilityRequest):
     )
     return result
 
+@app.get("/sample")
+def get_sample_entries():
+    """Returns the first five entries from the dataset."""
+    result = backend_services.sample_first_five_entries()
+    return result
+
 
 

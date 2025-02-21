@@ -1,7 +1,7 @@
 import { Container, Header, SpaceBetween } from "@cloudscape-design/components";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { API_ENDPOINT, PORT, SERVER_ENDPOINT } from "../consts/config";
+import { RESOURCES, PORT, API_ENDPOINT } from "../consts/apiConsts";
 import { Option } from "./types";
 import { AttributeSelect, useAttributeSelection } from "./AttributeSelect";
 import { AlgorithmSelect, useAlgorithmSelection } from "./AlgorithmSelect";
@@ -27,7 +27,7 @@ export const UserSelectionSection: React.FC = () => {
         const fetchColumns = async () => {
             setError(null);
             try {
-                const res = await axios.get(`${SERVER_ENDPOINT}:${PORT}/${API_ENDPOINT.COLUMNS}`);
+                const res = await axios.get(`${API_ENDPOINT}:${PORT}/${RESOURCES.COLUMNS}`);
                 
                 // Map columns to { label, value } format
                 const columnOptions: Option[] = JSON.parse(res.data).map((col: string) => ({

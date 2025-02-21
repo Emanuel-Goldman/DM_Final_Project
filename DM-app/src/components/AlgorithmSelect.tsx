@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Option } from "./types";
 import { FormField, Select, SelectProps } from "@cloudscape-design/components";
-import { ALGORITHM_OPTIONS } from "../consts/algorithms";
+import { ALGORITHM_OPTIONS } from "../consts/algorithmConsts";
 
 interface  AlgorithmSelectProps {
     label: string;

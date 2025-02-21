@@ -10,23 +10,27 @@ import os
 import hashlib
 
 
-file_path = os.path.join(os.path.dirname(__file__), "Data", "GM_players_statistics_cleaned.csv")
-df = pd.read_csv(file_path)
+cleaned_file_path = os.path.join(os.path.dirname(__file__), "Data", "GM_players_statistics_cleaned.csv")
+cleaned_df = pd.read_csv(cleaned_file_path)
+
+original_file_path = os.path.join(os.path.dirname(__file__), "Data", "GM_players_statistics.csv")
+original_df = pd.read_csv(original_file_path)
 
 
 def generate_ranking_id(ranking):
     """Generates a unique ID for a ranking by hashing the tuple."""
+
     ranking_str = ",".join(map(str, ranking))  # Convert to string
     return hashlib.md5(ranking_str.encode()).hexdigest()  # Hash it
 
 def sort_data(constraints: list, method: str, columns: list, num_ret_tuples: int, num_of_rankings : int, num_of_smaples : int = None, k_sample=None) -> tuple[pd.DataFrame, float]:
-
     """
     Sorts the data based on the constraints and method provided.
-    Returns the first "num_ret_tuples" rows for the "num_of_ranking" first most stabel rankings, the ranking functions and the stability score.
+    Returns the first "num_ret_tuples" rows for the "num_of_ranking" first most stable rankings, the ranking functions and the stability score.
     """
+
     # Checking parameters
-    if not(columns[0] in df.columns) or not(columns[1] in df.columns) or (len(columns) != 2):
+    if not(columns[0] in cleaned_df.columns) or not(columns[1] in cleaned_df.columns) or (len(columns) != 2):
         raise ValueError("Columns not found in the data or invalid number of columns provided")
     
     if len(constraints) != 0:
@@ -119,8 +123,8 @@ def calculate_exchange_ordering_angle(region_in_angles, indexes, columns):
     """
     Calculates the exchange ordering angle for a pair of players.
     """
-    item_1 = df.loc[indexes[0], columns]
-    item_2 = df.loc[indexes[1], columns]
+    item_1 = cleaned_df.loc[indexes[0], columns]
+    item_2 = cleaned_df.loc[indexes[1], columns]
 
     # check dominance
     if item_1[columns[0]] >= item_2[columns[0]] and item_1[columns[1]] >= item_2[columns[1]]:
@@ -190,7 +194,6 @@ def ray_sweeping(region_in_angles : list, columns : str) -> pd.DataFrame:
 
 
 def generate_randomized_angles(region_in_angles : list, num_of_smaples : int) -> list:
-    
     res  = []
     for i in range(num_of_smaples):
         angle = np.random.uniform(region_in_angles[0], region_in_angles[1])
@@ -255,7 +258,7 @@ def find_ranking(waights: list, columns: list) -> pd.DataFrame:
     if not math.isclose(waights[0] + waights[1], 1, rel_tol=1e-6):
         raise ValueError("Weights should sum to approximately 1")
     
-    df_ranked = df.copy()
+    df_ranked = cleaned_df.copy()
     df_ranked["Rank"] = df_ranked[columns[0]]*waights[0] + df_ranked[columns[1]]*waights[1]
     df_ranked = df_ranked.sort_values(by="Rank", ascending=False)
     return df_ranked
@@ -278,8 +281,10 @@ def find_angle(W1, W2):
 
 
 def find_feasible_angle_region(constraints):
-    """Finds the intersection of angle constraints given as (a, b, sign).
     """
+    Finds the intersection of angle constraints given as (a, b, sign).
+    """
+
     theta_min = 0
     theta_max = 90
 
@@ -306,7 +311,14 @@ def from_angle_to_vector(angle):
 
 
 def get_columns_names():
-    return df.columns.tolist()
+    return cleaned_df.columns.tolist()
+
+def sample_first_five_entries():
+    """
+    Returns the first five entries from the dataset.
+    """
+    
+    return original_df.head(5).replace({np.nan: None}).to_dict(orient="records")
 
 
 # def main():
