@@ -11,7 +11,7 @@ interface  AttributeSelectProps {
 
 export const AttributeSelect: React.FC<AttributeSelectProps> = ({label, selectedAttr, columns, handleSelection}) => {
     return (
-        <FormField label={label}>
+        <FormField label={label} stretch>
             <Select
                 selectedOption={selectedAttr}
                 options={columns}

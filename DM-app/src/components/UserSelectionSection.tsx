@@ -1,10 +1,11 @@
-import { Container, Header, SpaceBetween } from "@cloudscape-design/components";
+import { Alert, Container, FormField, Header, SpaceBetween } from "@cloudscape-design/components";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { RESOURCES, PORT, API_ENDPOINT } from "../consts/apiConsts";
 import { Option } from "./types";
 import { AttributeSelect, useAttributeSelection } from "./AttributeSelect";
 import { AlgorithmSelect, useAlgorithmSelection } from "./AlgorithmSelect";
+import { ConstraintInput } from "./ConstraintInput";
 
 export const UserSelectionSection: React.FC = () => {
     const [columns, setColumns] = useState<Option[]>([]);
@@ -58,24 +59,29 @@ export const UserSelectionSection: React.FC = () => {
                 </Header>
             }
         >
-            <SpaceBetween size="s" direction="horizontal">
-                <AttributeSelect
-                    label="Attribute 1"
-                    selectedAttr={firstAttr}
-                    columns={columns}
-                    handleSelection={handleFirstAttrSelect}
-                />
-                <AttributeSelect
-                    label="Attribute 2"
-                    selectedAttr={secondAttr}
-                    columns={columns}
-                    handleSelection={handleSecondAttrSelect}
-                />
-                <AlgorithmSelect
-                    label="Ranking algorithm"
-                    selectedAlg={algorithm}
-                    handleSelection={handleAlgorithmSelect}
-                />
+            <SpaceBetween size="s">
+                <SpaceBetween size="s" direction="horizontal">
+                    <AttributeSelect
+                        label="Attribute 1"
+                        selectedAttr={firstAttr}
+                        columns={columns}
+                        handleSelection={handleFirstAttrSelect}
+                    />
+                    <AttributeSelect
+                        label="Attribute 2"
+                        selectedAttr={secondAttr}
+                        columns={columns}
+                        handleSelection={handleSecondAttrSelect}
+                    />
+                    <AlgorithmSelect
+                        label="Ranking algorithm"
+                        selectedAlg={algorithm}
+                        handleSelection={handleAlgorithmSelect}
+                    />
+                </SpaceBetween>
+                <FormField label={"Constraints"}>
+                    <ConstraintInput/>
+                </FormField>
             </SpaceBetween>
         </Container>
     );
