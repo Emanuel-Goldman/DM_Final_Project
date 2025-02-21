@@ -23,70 +23,100 @@ def generate_ranking_id(ranking):
     ranking_str = ",".join(map(str, ranking))  # Convert to string
     return hashlib.md5(ranking_str.encode()).hexdigest()  # Hash it
 
-def sort_data(constraints: list, method: str, columns: list, num_ret_tuples: int, num_of_rankings : int, num_of_smaples : int = None, k_sample=None) -> tuple[pd.DataFrame, float]:
-    """
-    Sorts the data based on the constraints and method provided.
-    Returns the first "num_ret_tuples" rows for the "num_of_ranking" first most stable rankings, the ranking functions and the stability score.
-    """
-
-    # Checking parameters
-    if not(columns[0] in cleaned_df.columns) or not(columns[1] in cleaned_df.columns) or (len(columns) != 2):
+def validate_input(columns, cleaned_df):
+    """ Validates input columns to ensure they exist in the dataset and are exactly two. """
+    if len(columns) != 2 or not all(col in cleaned_df.columns for col in columns):
         raise ValueError("Columns not found in the data or invalid number of columns provided")
-    
-    if len(constraints) != 0:
+
+def compute_feasible_region(constraints):
+    """ Computes the feasible angle region based on constraints. Raises an error if infeasible. """
+    if constraints:
         region_in_angles = find_feasible_angle_region(constraints)
         if region_in_angles is None:
             raise ValueError("No feasible region found - Infeasible constraints")
+        return region_in_angles
+    return None
 
-    # Sorting the data
+def process_ray_sweeping(region_in_angles, columns, num_of_rankings, num_ret_tuples):
+    """ Processes the ranking using the Ray Sweeping method and returns results. """
+    ranking_heap = ray_sweeping(region_in_angles, columns)
+    results = []
+
+    for _ in range(num_of_rankings):
+        stability, angle_range_rank = heapq.heappop(ranking_heap)
+        stability = -stability
+        angle = np.mean(angle_range_rank)
+        ranking_function = from_angle_to_vector(angle)
+        ranking = find_ranking(ranking_function, columns).reset_index(drop=True)
+
+        final_df = ranking.loc[:num_ret_tuples-1, ["user_id", "name", "Rank", columns[0], columns[1]]]
+        results.append(format_ranking_output(final_df, ranking_function, stability))
+
+    return results
+
+def process_randomized_rounding(region_in_angles, columns, num_of_rankings, num_ret_tuples, num_of_samples, k_sample):
+    """ Processes the ranking using the Randomized Rounding method and returns results. """
+    if k_sample is None or k_sample > 100:
+        k_sample = 100
+
+    ranking_list = randomized_get_next(region_in_angles, columns, num_of_rankings, num_ret_tuples, num_of_samples, k_sample)
+    results = []
+
+    for rank in ranking_list:
+        angle, stability = rank
+        ranking_function = from_angle_to_vector(angle)
+        ranking = find_ranking(ranking_function, columns).reset_index(drop=True)
+
+        final_df = ranking.loc[:num_ret_tuples-1, ["user_id", "name", "Rank", columns[0], columns[1]]]
+        results.append(format_ranking_output(final_df, ranking_function, stability))
+
+    return results
+
+def format_ranking_output(final_df, ranking_function, stability):
+    """ Formats ranking output into dictionary format. """
+    return {
+        "Ranking": final_df.to_dict(orient="records"),
+        "Ranking_Function": {"w1": ranking_function[0], "w2": ranking_function[1]},
+        "Stability": stability
+    }
+
+def save_results_to_json(results, filename="res.json"):
+    """ Saves results to a JSON file. """
+    with open(filename, "w") as file:
+        json.dump(results, file, indent=4)
+
+def sort_data(constraints: list, method: str, columns: list, num_ret_tuples: int, num_of_rankings : int, num_of_samples : int = None, k_sample=None) -> tuple[pd.DataFrame, float]:
+    """
+    Sorts the data based on the constraints and method provided.
+
+    Parameters:
+        constraints (list): List of constraints that define the feasible ranking region.
+        method (str): Sorting method, either "Ray Sweeping" or "Randomized Rounding".
+        columns (list): List containing exactly two column names to be used for ranking.
+        num_ret_tuples (int): Number of top-ranked tuples to return.
+        num_of_rankings (int): Number of top stable rankings to compute.
+        num_of_samples (int, optional): Number of samples used in randomized rounding (only applicable for "Randomized Rounding").
+        k_sample (int, optional): Maximum sample size for randomized ranking.
+
+    Returns:
+        tuple[pd.DataFrame, float]: A tuple containing:
+            - The ranked DataFrame.
+            - The stability score of the ranking.
+    """
+
+    validate_input(columns, cleaned_df)
+    region_in_angles = compute_feasible_region(constraints)
+
+    # Handle sorting based on the selected method
     if method == "Ray Sweeping":
-        ranking_heap = ray_sweeping(region_in_angles, columns)
-        res = []
-        for i in range(num_of_rankings):
-            stability, angle_range_rank = heapq.heappop(ranking_heap)
-            stability = -stability
-            angle = np.mean(angle_range_rank)
-            ranking = find_ranking(from_angle_to_vector(angle), columns)
-            ranking_function = from_angle_to_vector(angle)
-            ranking = ranking.reset_index(drop=True)
-            final_df = ranking.loc[:num_ret_tuples-1, ["user_id","name","Rank",columns[0], columns[1]]]
-            print(final_df)
-            final_df_dict = final_df.to_dict(orient="records")
-            ranking_function_final = {"w1": ranking_function[0], "w2": ranking_function[1]}
-            res.append({"Ranking":final_df_dict, "Ranking_Function":ranking_function_final, "Stability":stability})
-            
-
+        results = process_ray_sweeping(region_in_angles, columns, num_of_rankings, num_ret_tuples)
     elif method == "Randomized Rounding":
-
-        if k_sample==None or k_sample>100:
-            k_sample = 100
-
-        ranking_list = randomized_get_next(region_in_angles, columns, num_of_rankings, num_ret_tuples, num_of_smaples, k_sample)
-        res =[]
-
-        for rank in ranking_list:
-            angle = rank[0]
-            stability = rank[1]
-            ranking = find_ranking(from_angle_to_vector(angle), columns)
-            ranking_function = from_angle_to_vector(angle)
-            ranking = ranking.reset_index(drop=True)
-            final_df = ranking.loc[:num_ret_tuples-1, ["user_id","name","Rank",columns[0], columns[1]]]
-            final_df_dict = final_df.to_dict(orient="records")
-            ranking_function_final = {"w1": ranking_function[0], "w2": ranking_function[1]}
-            res.append({"Ranking":final_df_dict, "Ranking_Function":ranking_function_final, "Stability":stability})
-
+        results = process_randomized_rounding(region_in_angles, columns, num_of_rankings, num_ret_tuples, num_of_samples, k_sample)
     else:
         raise ValueError(f"Invalid method provided - {method}, choose from 'Ray_Sweeping' or 'Randomized_Rounding'")
     
-    # stability = get_ranking_stability(ranking, columns)
-    # final_df = ranking.loc[:num_ret_tuples,["user_id","name","Rank",columns[0], columns[1]]]
-
-    # Convert list to JSON and save it to a file
-    with open("res.json", "w") as file:
-        json.dump(res, file, indent=4)
-    
-    return res
-
+    save_results_to_json(results)
+    return results
 
 def get_ranking_stability(W1, W2, columns):
 
@@ -116,9 +146,6 @@ def get_ranking_stability(W1, W2, columns):
     res = (max_angle - min_angle)/ 90
     return {'stability': res}
 
-    
-    
-
 def calculate_exchange_ordering_angle(region_in_angles, indexes, columns):
     """
     Calculates the exchange ordering angle for a pair of players.
@@ -143,7 +170,6 @@ def calculate_exchange_ordering_angle(region_in_angles, indexes, columns):
         # print(f"Angle between {indexes[0]} and {indexes[1]} is {angle} outside the feasible region")
         # print(f"values: {float(item_1[columns[0]]), float(item_1[columns[1]])} and {float(item_2[columns[0]]), float(item_2[columns[1]])}")
         return None
-    
 
 def compute_first_quadrant_angle(item_1, item_2, columns):
     delta_x = item_2[columns[0]] - item_1[columns[0]]
@@ -161,7 +187,6 @@ def compute_first_quadrant_angle(item_1, item_2, columns):
     
     return angle
     
-
 def ray_sweeping(region_in_angles : list, columns : str) -> pd.DataFrame:
 
     # print(f"range is between {region_in_angles[0]} and {region_in_angles[1]}")
@@ -191,8 +216,6 @@ def ray_sweeping(region_in_angles : list, columns : str) -> pd.DataFrame:
     
     return max_heap
 
-
-
 def generate_randomized_angles(region_in_angles : list, num_of_smaples : int) -> list:
     res  = []
     for i in range(num_of_smaples):
@@ -200,7 +223,6 @@ def generate_randomized_angles(region_in_angles : list, num_of_smaples : int) ->
         res.append(angle)
     
     return res
-
 
 def randomized_get_next(region_in_angles : list, columns : str, num_of_rankings : int, num_ret_tuples : int, num_of_smaples : int, k_sample : int) -> list:
     
@@ -249,8 +271,6 @@ def randomized_get_next(region_in_angles : list, columns : str, num_of_rankings 
 
     return ranking_list
         
-
-
 def find_ranking(waights: list, columns: list) -> pd.DataFrame:
     if len(waights) != 2:
         raise ValueError("Invalid number of weights provided")
@@ -266,7 +286,6 @@ def find_ranking(waights: list, columns: list) -> pd.DataFrame:
 # def find_angle(a, b):
 #     return np.degrees(np.arctan2(b, a))
 
-
 def find_angle(W1, W2):
     print(f"DEBUG: Inside find_angle, W1={W1}, W2={W2}, Type(W1)={type(W1)}, Type(W2)={type(W2)}")
 
@@ -277,8 +296,6 @@ def find_angle(W1, W2):
     W2 = float(W2)
 
     return np.degrees(np.arctan2(W2, W1))
-
-
 
 def find_feasible_angle_region(constraints):
     """
@@ -300,7 +317,6 @@ def find_feasible_angle_region(constraints):
 
     return theta_min, theta_max
 
-    
 def from_angle_to_vector(angle):
     w_1 = math.cos(math.radians(angle))
     w_2 = math.sin(math.radians(angle))
@@ -308,7 +324,6 @@ def from_angle_to_vector(angle):
     # Normalize to make sure w_1 + w_2 = 1
     total = w_1 + w_2
     return [w_1 / total, w_2 / total]
-
 
 def get_columns_names():
     return cleaned_df.columns.tolist()
@@ -319,7 +334,6 @@ def sample_first_five_entries():
     """
     
     return original_df.head(5).replace({np.nan: None}).to_dict(orient="records")
-
 
 # def main():
 
