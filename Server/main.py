@@ -52,13 +52,10 @@ def get_ranking(data: RankingRequest):
     )
     return result  # FastAPI will automatically convert this to JSON
 
-
 class StabilityRequest(BaseModel):
     W1: float
     W2: float
     columns: list
-
-
 
 @app.post("/stability")
 def get_stability(data: StabilityRequest):
