@@ -30,6 +30,17 @@ export const Results: React.FC<ResultsProps> = ({ rankingResults }) => {
         w2: ranking.ranking_function.w2,
     }));
 
+    // Create a map to collect user names ranked at each position
+    const rankedUsers: { [key: number]: Set<string> } = {};
+    rankingResults.forEach(result => {
+        result.ranked_list.forEach((user, index) => {
+            if (!rankedUsers[index + 1]) {
+                rankedUsers[index + 1] = new Set(); // Initialize a Set for unique names
+            }
+            rankedUsers[index + 1].add(user.name); // Add user name to the Set
+        });
+    });
+
     return (
         <Container header={<Header variant="h2">Results</Header>}>
             <Tabs
@@ -38,7 +49,7 @@ export const Results: React.FC<ResultsProps> = ({ rankingResults }) => {
                         id: "insights",
                         label: "Insights",
                         content: (
-                            <SpaceBetween size="m">
+                            <SpaceBetween size="xl">
                                 {/* Stability Score Bar Chart */}
                                 <BarChart
                                     series={[
@@ -73,7 +84,30 @@ export const Results: React.FC<ResultsProps> = ({ rankingResults }) => {
                                     yTitle="Weight Value"
                                     height={300}
                                     hideFilter
-                                    hideLegend
+                                />
+                                {/* Table for ranked users */}
+                                <Table
+                                    header={<Header variant="h3">Ranked Users</Header>}
+                                    columnDefinitions={[
+                                        {
+                                            id: 'position',
+                                            header: 'Position',
+                                            cell: (item: any) => item.position,
+                                        },
+                                        {
+                                            id: 'users',
+                                            header: 'Users',
+                                            cell: (item: any) => item.users.join(", "), // Join names for display
+                                        },
+                                    ]}
+                                    items={Object.keys(rankedUsers).map(position => ({
+                                        position: `Rank ${position}`,
+                                        users: Array.from(rankedUsers[+position]), // Convert Set to Array and use +position to convert string to number
+                                    }))}
+                                    sortingDisabled
+                                    stripedRows
+                                    stickyHeader
+                                    variant="embedded"
                                 />
                             </SpaceBetween>
                         ),

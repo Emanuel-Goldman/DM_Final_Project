@@ -3,7 +3,6 @@ import { ContentLayout, Header, SpaceBetween } from "@cloudscape-design/componen
 import { AboutSection } from "./components/AboutSection";
 import { RankingSettingsSection } from "./components/RankingSettingsSection";
 import { DatasetPreviewSection } from "./components/DatasetPreviewSection";
-import { Results } from "./components/Results";
 
 function App() {
   return (

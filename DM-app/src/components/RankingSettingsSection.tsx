@@ -22,7 +22,6 @@ export const RankingSettingsSection: React.FC = () => {
     } = useAlgorithmSelection();
     const {
         constraints,
-        parsedConstraints,
         constraintError,
         parseConstraints,
         handleConstraintsChange
@@ -60,13 +59,11 @@ export const RankingSettingsSection: React.FC = () => {
     }, []);
 
     const handleSubmit = async () => {
-        parseConstraints();
-
         setError(null);
 
         try {
             const data = {
-                constraints: parsedConstraints,
+                constraints: parseConstraints(),
                 method: algorithm?.value,
                 columns: [firstAttr?.value, secondAttr?.value],
                 num_ret_tuples: parseInt(tupleLimit, 10),
@@ -94,6 +91,7 @@ export const RankingSettingsSection: React.FC = () => {
                     </Header>
                 }
             >
+                {error && <Alert type="error">{error}</Alert>}
                 <SpaceBetween size="s">
                     <SpaceBetween size="s" direction="horizontal">
                         <AttributeSelect
@@ -143,7 +141,7 @@ export const RankingSettingsSection: React.FC = () => {
                         description={`Expected format: "number*w1 operator number*w2" (without spaces). Example: 1*w1>=2*w2.`}
                         constraintText={`Every constraint should appear in a separate line.`}
                     >
-                        {error && <Alert type="error">{constraintError}</Alert>}
+                        {constraintError && <Alert type="error">{constraintError}</Alert>}
                         <Textarea
                             placeholder="Enter constraints for the weight function..."
                             value={constraints}

@@ -18,7 +18,7 @@ export const AlgorithmSelect: React.FC<AlgorithmSelectProps> = ({label, selected
             <Select
                 selectedOption={selectedAlg}
                 options={ALGORITHM_OPTIONS}
-                placeholder="Select ranking algorithm ..."
+                placeholder="Select ranking algorithm..."
                 onChange={handleSelection}
             />
         </FormField>

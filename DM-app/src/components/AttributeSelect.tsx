@@ -16,7 +16,7 @@ export const AttributeSelect: React.FC<AttributeSelectProps> = ({label, descript
             <Select
                 selectedOption={selectedAttr}
                 options={columns}
-                placeholder="Select attribute ..."
+                placeholder="Select attribute..."
                 onChange={handleSelection}
             />
         </FormField>

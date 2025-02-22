@@ -6,7 +6,6 @@ type ConstraintItem = [number, number, string];
 
 export const useConstraintInput = () => {
     const [constraints, setConstraints] = useState<string>("");
-    const [parsedConstraints, setParsedConstraints] = useState<ConstraintItem[]>([]);
     const [constraintError, setConstraintError] = useState<string | null>(null);
 
     const handleConstraintsChange: TextareaProps['onChange'] = (event) => {
@@ -48,12 +47,11 @@ export const useConstraintInput = () => {
             }
         }
 
-        setParsedConstraints(parsed); 
+        return parsed; 
     };
 
     return {
         constraints,
-        parsedConstraints,
         constraintError,
         parseConstraints,
         handleConstraintsChange
