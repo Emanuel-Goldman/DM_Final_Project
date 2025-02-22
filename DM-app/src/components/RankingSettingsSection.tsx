@@ -138,8 +138,7 @@ export const RankingSettingsSection: React.FC = () => {
                     </SpaceBetween>
                     <FormField 
                         label={"Constraints"}
-                        description={`Expected format: "number*w1 operator number*w2" (without spaces). Example: 1*w1>=2*w2.`}
-                        constraintText={`Every constraint should appear in a separate line.`}
+                        description={`Expected format: "number*w1 operator number*w2" (without spaces). Example: 1*w1>=2*w2. Every constraint should appear in a separate line.`}
                     >
                         {constraintError && <Alert type="error">{constraintError}</Alert>}
                         <Textarea
