@@ -9,13 +9,11 @@ from fastapi import FastAPI
 import os
 import hashlib
 
-
 cleaned_file_path = os.path.join(os.path.dirname(__file__), "Data", "GM_players_statistics_cleaned.csv")
 cleaned_df = pd.read_csv(cleaned_file_path)
 
 original_file_path = os.path.join(os.path.dirname(__file__), "Data", "GM_players_statistics.csv")
 original_df = pd.read_csv(original_file_path)
-
 
 def generate_ranking_id(ranking):
     """Generates a unique ID for a ranking by hashing the tuple."""
@@ -75,7 +73,7 @@ def process_randomized_rounding(region_in_angles, columns, num_of_rankings, num_
 def format_ranking_output(final_df, ranking_function, stability):
     """ Formats ranking output into dictionary format. """
     return {
-        "ranking": final_df.to_dict(orient="records"),
+        "ranked_list": final_df.to_dict(orient="records"),
         "ranking_function": {"w1": ranking_function[0], "w2": ranking_function[1]},
         "stability": stability
     }

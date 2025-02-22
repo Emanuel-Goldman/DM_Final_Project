@@ -11,7 +11,10 @@ interface  AlgorithmSelectProps {
 
 export const AlgorithmSelect: React.FC<AlgorithmSelectProps> = ({label, selectedAlg, handleSelection}) => {
     return (
-        <FormField label={label} stretch>
+        <FormField 
+            label={label}
+            description="Ranking algorithm to be used"
+        >
             <Select
                 selectedOption={selectedAlg}
                 options={ALGORITHM_OPTIONS}

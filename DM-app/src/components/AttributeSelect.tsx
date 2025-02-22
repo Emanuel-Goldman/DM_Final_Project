@@ -4,14 +4,15 @@ import { useState } from "react";
 
 interface  AttributeSelectProps {
     label: string;
+    description: string;
     selectedAttr: Option | null;
     columns: Option[];
     handleSelection: SelectProps['onChange'];
 }
 
-export const AttributeSelect: React.FC<AttributeSelectProps> = ({label, selectedAttr, columns, handleSelection}) => {
+export const AttributeSelect: React.FC<AttributeSelectProps> = ({label, description, selectedAttr, columns, handleSelection}) => {
     return (
-        <FormField label={label} stretch>
+        <FormField label={label} description={description}>
             <Select
                 selectedOption={selectedAttr}
                 options={columns}

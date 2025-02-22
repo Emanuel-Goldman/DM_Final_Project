@@ -61,6 +61,7 @@ export const DatasetPreviewSection : React.FC = () => {
                     }
                     items={sample}
                     sortingDisabled
+                    stripedRows
                     loadingText="Loading dataset preview..."
                 />
             )}
