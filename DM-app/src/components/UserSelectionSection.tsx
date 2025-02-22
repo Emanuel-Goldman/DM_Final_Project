@@ -1,11 +1,11 @@
-import { Alert, Container, FormField, Header, SpaceBetween } from "@cloudscape-design/components";
+import { Alert, Container, FormField, Header, SpaceBetween, Textarea } from "@cloudscape-design/components";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { RESOURCES, PORT, API_ENDPOINT } from "../consts/apiConsts";
 import { Option } from "./types";
 import { AttributeSelect, useAttributeSelection } from "./AttributeSelect";
 import { AlgorithmSelect, useAlgorithmSelection } from "./AlgorithmSelect";
-import { ConstraintInput } from "./ConstraintInput";
+import { useConstraintInput } from "./ConstraintInput";
 
 export const UserSelectionSection: React.FC = () => {
     const [columns, setColumns] = useState<Option[]>([]);
@@ -19,6 +19,13 @@ export const UserSelectionSection: React.FC = () => {
         algorithm,
         handleAlgorithmSelect
     } = useAlgorithmSelection();
+    const {
+        constraints,
+        parsedConstraints,
+        constraintError,
+        parseConstraints,
+        handleConstraintsChange
+    } = useConstraintInput();
     
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -80,7 +87,12 @@ export const UserSelectionSection: React.FC = () => {
                     />
                 </SpaceBetween>
                 <FormField label={"Constraints"}>
-                    <ConstraintInput/>
+                    <Textarea
+                        placeholder="Enter constraints for the weight function..."
+                        value={constraints}
+                        onChange={handleConstraintsChange}
+                        invalid={constraintError != null}
+                    />
                 </FormField>
             </SpaceBetween>
         </Container>

@@ -1,24 +1,29 @@
-import { Alert, Button, SpaceBetween, Textarea, TextareaProps} from "@cloudscape-design/components";
+import { TextareaProps} from "@cloudscape-design/components";
 import { useState } from "react";
 
-// Define a type for constraint items as a tuple: [weight1, weight2, operator]
+// Constraint item type as a tuple: [weight1, weight2, operator]
 type ConstraintItem = [number, number, string];
 
-export const ConstraintInput: React.FC = () => {
+export const useConstraintInput = () => {
     const [constraints, setConstraints] = useState<string>("");
     const [parsedConstraints, setParsedConstraints] = useState<ConstraintItem[]>([]);
-    const [error, setError] = useState<string | null>(null);
+    const [constraintError, setConstraintError] = useState<string | null>(null);
 
     const handleConstraintsChange: TextareaProps['onChange'] = (event) => {
         setConstraints(event.detail.value); 
-        setError(null);
+        setConstraintError(null);
     };
 
+    /**
+     * Parse constraints input string into the format [a1,a2,op],
+     * where 'a1' is the coefficient of 'w1', 'a2' is the coefficient of 'w2', and 'op' is the operation between them.
+     * Example: '2*w1>=3*w2' --> [2,3,>=]
+     */
     const parseConstraints = () => {
         const lines = constraints.split("\n"); // Split input into lines
         const parsed: ConstraintItem[] = [];
 
-        setError(null);
+        setConstraintError(null);
 
         for (const line of lines) {
             const regex = /(\d+)\*w(\d+)([<>]=?)(\d+)\*w(\d+)/; // Regex to capture the constraint format
@@ -37,7 +42,7 @@ export const ConstraintInput: React.FC = () => {
                     Expected format: "number*w1 operator number*w2" (without spaces). Example: 1*w1>=2*w2.\n
                     Every constraint should appear in a separate line.
                 `;
-                setError(err);
+                setConstraintError(err);
                 console.error(err);
                 return;
             }
@@ -46,16 +51,11 @@ export const ConstraintInput: React.FC = () => {
         setParsedConstraints(parsed); 
     };
 
-    return (
-        <SpaceBetween size="m">
-            {error && <Alert type="error">{error}</Alert>}
-            <Textarea
-                placeholder="Enter constraints for the weight function..."
-                value={constraints}
-                onChange={handleConstraintsChange}
-                invalid={error != null}
-            />
-            <Button onClick={parseConstraints}>Parse constraints</Button>
-        </SpaceBetween>
-    );
+    return {
+        constraints,
+        parsedConstraints,
+        constraintError,
+        parseConstraints,
+        handleConstraintsChange
+    };
 };
