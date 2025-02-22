@@ -30,7 +30,6 @@ export const RankingSettingsSection: React.FC = () => {
     const [tupleLimit, setTupleLimit] = useState<string>('5');
     const [rankingCount, setRankingCount] = useState<string>('10');
     
-    const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     const [rankingResults, setRankingResults] = useState<any[]>([]);
@@ -64,7 +63,6 @@ export const RankingSettingsSection: React.FC = () => {
         parseConstraints();
 
         setError(null);
-        setLoading(true);
 
         try {
             const data = {
@@ -81,9 +79,7 @@ export const RankingSettingsSection: React.FC = () => {
         } catch (err: any) {
             setError("Error fetching data");
             console.error("API Error:", err);
-        } finally {
-            setLoading(false);
-        }
+        } 
     };
     
     return (
