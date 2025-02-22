@@ -49,7 +49,7 @@ def process_ray_sweeping(region_in_angles, columns, num_of_rankings, num_ret_tup
         ranking_function = from_angle_to_vector(angle)
         ranking = find_ranking(ranking_function, columns).reset_index(drop=True)
 
-        final_df = ranking.loc[:num_ret_tuples-1, ["user_id", "name", "Rank", columns[0], columns[1]]]
+        final_df = ranking.loc[:num_ret_tuples-1, ["user_id", "name", "rank", columns[0], columns[1]]]
         results.append(format_ranking_output(final_df, ranking_function, stability))
 
     return results
@@ -67,7 +67,7 @@ def process_randomized_rounding(region_in_angles, columns, num_of_rankings, num_
         ranking_function = from_angle_to_vector(angle)
         ranking = find_ranking(ranking_function, columns).reset_index(drop=True)
 
-        final_df = ranking.loc[:num_ret_tuples-1, ["user_id", "name", "Rank", columns[0], columns[1]]]
+        final_df = ranking.loc[:num_ret_tuples-1, ["user_id", "name", "rank", columns[0], columns[1]]]
         results.append(format_ranking_output(final_df, ranking_function, stability))
 
     return results
@@ -75,9 +75,9 @@ def process_randomized_rounding(region_in_angles, columns, num_of_rankings, num_
 def format_ranking_output(final_df, ranking_function, stability):
     """ Formats ranking output into dictionary format. """
     return {
-        "Ranking": final_df.to_dict(orient="records"),
-        "Ranking_Function": {"w1": ranking_function[0], "w2": ranking_function[1]},
-        "Stability": stability
+        "ranking": final_df.to_dict(orient="records"),
+        "ranking_function": {"w1": ranking_function[0], "w2": ranking_function[1]},
+        "stability": stability
     }
 
 def save_results_to_json(results, filename="res.json"):
@@ -91,11 +91,11 @@ def sort_data(constraints: list, method: str, columns: list, num_ret_tuples: int
 
     Parameters:
         constraints (list): List of constraints that define the feasible ranking region.
-        method (str): Sorting method, either "Ray Sweeping" or "Randomized Rounding".
+        method (str): Sorting method, either "raysweeping" or "randomized-rounding".
         columns (list): List containing exactly two column names to be used for ranking.
         num_ret_tuples (int): Number of top-ranked tuples to return.
         num_of_rankings (int): Number of top stable rankings to compute.
-        num_of_samples (int, optional): Number of samples used in randomized rounding (only applicable for "Randomized Rounding").
+        num_of_samples (int, optional): Number of samples used in randomized rounding (only applicable for "randomized-rounding").
         k_sample (int, optional): Maximum sample size for randomized ranking.
 
     Returns:
@@ -108,12 +108,12 @@ def sort_data(constraints: list, method: str, columns: list, num_ret_tuples: int
     region_in_angles = compute_feasible_region(constraints)
 
     # Handle sorting based on the selected method
-    if method == "Ray Sweeping":
+    if method == "raysweeping":
         results = process_ray_sweeping(region_in_angles, columns, num_of_rankings, num_ret_tuples)
-    elif method == "Randomized Rounding":
+    elif method == "randomized-rounding":
         results = process_randomized_rounding(region_in_angles, columns, num_of_rankings, num_ret_tuples, num_of_samples, k_sample)
     else:
-        raise ValueError(f"Invalid method provided - {method}, choose from 'Ray_Sweeping' or 'Randomized_Rounding'")
+        raise ValueError(f"Invalid method provided - {method}, choose from 'raysweeping' or 'randomized-rounding'")
     
     save_results_to_json(results)
     return results
@@ -279,8 +279,8 @@ def find_ranking(waights: list, columns: list) -> pd.DataFrame:
         raise ValueError("Weights should sum to approximately 1")
     
     df_ranked = cleaned_df.copy()
-    df_ranked["Rank"] = df_ranked[columns[0]]*waights[0] + df_ranked[columns[1]]*waights[1]
-    df_ranked = df_ranked.sort_values(by="Rank", ascending=False)
+    df_ranked["rank"] = df_ranked[columns[0]]*waights[0] + df_ranked[columns[1]]*waights[1]
+    df_ranked = df_ranked.sort_values(by="rank", ascending=False)
     return df_ranked
 
 # def find_angle(a, b):
@@ -347,3 +347,4 @@ def sample_first_five_entries():
 
 # if __name__ == "__main__":
     # main()
+
