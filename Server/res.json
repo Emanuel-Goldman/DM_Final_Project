@@ -2,441 +2,391 @@
     {
         "ranked_list": [
             {
-                "user_id": 151208049,
-                "name": "A.A AL",
-                "rank": 0.7919564793183811,
-                "blitz_win": 0.004667620266506,
-                "rapid_win": 1.0
+                "user_id": 11177810,
+                "name": "Fabiano Caruana",
+                "current_rapid_rating": 2794.0,
+                "current_blitz_rating": 3125.0
             },
             {
-                "user_id": 1343066,
-                "name": "Andrey Gorovets",
-                "rank": 0.4489303745480887,
-                "blitz_win": 0.2260784461341564,
-                "rapid_win": 0.5078196872125115
+                "user_id": 15448422,
+                "name": "Hikaru Nakamura",
+                "current_rapid_rating": 2781.0,
+                "current_blitz_rating": 3232.0
             },
             {
-                "user_id": 4262684,
-                "name": "Bogdan Lalic",
-                "rank": 0.439162681908153,
-                "blitz_win": 0.022685638284524,
-                "rapid_win": 0.5492180312787489
+                "user_id": 17306408,
+                "name": "Maxime Vachier-Lagrave",
+                "current_rapid_rating": 2754.0,
+                "current_blitz_rating": 3127.0
             },
             {
-                "user_id": 8344034,
-                "name": "Andrew Tang",
-                "rank": 0.42727130452539336,
-                "blitz_win": 0.0806795653592311,
-                "rapid_win": 0.5188592456301748
+                "user_id": 85851574,
+                "name": "Anish Giri",
+                "current_rapid_rating": 2948.0,
+                "current_blitz_rating": 3009.0
             },
             {
-                "user_id": 2406471,
-                "name": "Rogelio Jr Antonio",
-                "rank": 0.4185890478304979,
-                "blitz_win": 1.0,
-                "rapid_win": 0.2649494020239191
+                "user_id": 30209744,
+                "name": "Rauf Mamedov",
+                "current_rapid_rating": 2673.0,
+                "current_blitz_rating": 3198.0
             }
         ],
         "ranking_function": {
-            "w1": 0.20901914266802396,
-            "w2": 0.7909808573319761
+            "w1": 0.5380039850036632,
+            "w2": 0.4619960149963368
         },
-        "stability": 0.03
+        "stability": 0.021934316593895335
     },
     {
         "ranked_list": [
             {
-                "user_id": 151208049,
-                "name": "A.A AL",
-                "rank": 0.9749376006353201,
-                "blitz_win": 0.004667620266506,
-                "rapid_win": 1.0
+                "user_id": 11177810,
+                "name": "Fabiano Caruana",
+                "current_rapid_rating": 2794.0,
+                "current_blitz_rating": 3125.0
             },
             {
-                "user_id": 4262684,
-                "name": "Bogdan Lalic",
-                "rank": 0.5359599826305221,
-                "blitz_win": 0.022685638284524,
-                "rapid_win": 0.5492180312787489
+                "user_id": 15448422,
+                "name": "Hikaru Nakamura",
+                "current_rapid_rating": 2781.0,
+                "current_blitz_rating": 3232.0
             },
             {
-                "user_id": 8344034,
-                "name": "Andrew Tang",
-                "rank": 0.5078259120784435,
-                "blitz_win": 0.0806795653592311,
-                "rapid_win": 0.5188592456301748
+                "user_id": 17306408,
+                "name": "Maxime Vachier-Lagrave",
+                "current_rapid_rating": 2754.0,
+                "current_blitz_rating": 3127.0
             },
             {
-                "user_id": 1343066,
-                "name": "Andrey Gorovets",
-                "rank": 0.5007254625643623,
-                "blitz_win": 0.2260784461341564,
-                "rapid_win": 0.5078196872125115
+                "user_id": 85851574,
+                "name": "Anish Giri",
+                "current_rapid_rating": 2948.0,
+                "current_blitz_rating": 3009.0
             },
             {
-                "user_id": 31622756,
-                "name": "Rasmus Svane",
-                "rank": 0.4450658076782312,
-                "blitz_win": 0.0813069336746217,
-                "rapid_win": 0.4544618215271389
+                "user_id": 30209744,
+                "name": "Rauf Mamedov",
+                "current_rapid_rating": 2673.0,
+                "current_blitz_rating": 3198.0
             }
         ],
         "ranking_function": {
-            "w1": 0.025179929714926632,
-            "w2": 0.9748200702850734
+            "w1": 0.5165570810296987,
+            "w2": 0.4834429189703013
         },
-        "stability": 0.03
+        "stability": 0.019059863412290195
     },
     {
         "ranked_list": [
             {
-                "user_id": 151208049,
-                "name": "A.A AL",
-                "rank": 0.7749298254610364,
-                "blitz_win": 0.004667620266506,
-                "rapid_win": 1.0
+                "user_id": 11177810,
+                "name": "Fabiano Caruana",
+                "current_rapid_rating": 2794.0,
+                "current_blitz_rating": 3125.0
             },
             {
-                "user_id": 1343066,
-                "name": "Andrey Gorovets",
-                "rank": 0.44411076786507864,
-                "blitz_win": 0.2260784461341564,
-                "rapid_win": 0.5078196872125115
+                "user_id": 15448422,
+                "name": "Hikaru Nakamura",
+                "current_rapid_rating": 2781.0,
+                "current_blitz_rating": 3232.0
             },
             {
-                "user_id": 2406471,
-                "name": "Rogelio Jr Antonio",
-                "rank": 0.43116319125656033,
-                "blitz_win": 1.0,
-                "rapid_win": 0.2649494020239191
+                "user_id": 17306408,
+                "name": "Maxime Vachier-Lagrave",
+                "current_rapid_rating": 2754.0,
+                "current_blitz_rating": 3127.0
             },
             {
-                "user_id": 4262684,
-                "name": "Bogdan Lalic",
-                "rank": 0.43015555526108007,
-                "blitz_win": 0.022685638284524,
-                "rapid_win": 0.5492180312787489
+                "user_id": 85851574,
+                "name": "Anish Giri",
+                "current_rapid_rating": 2948.0,
+                "current_blitz_rating": 3009.0
             },
             {
-                "user_id": 8344034,
-                "name": "Andrew Tang",
-                "rank": 0.41977558360320955,
-                "blitz_win": 0.0806795653592311,
-                "rapid_win": 0.5188592456301748
+                "user_id": 26303484,
+                "name": "Vladimir Fedoseev",
+                "current_rapid_rating": 2778.0,
+                "current_blitz_rating": 3064.0
             }
         ],
         "ranking_function": {
-            "w1": 0.22612564317381853,
-            "w2": 0.7738743568261816
+            "w1": 0.7656820097314925,
+            "w2": 0.23431799026850747
         },
-        "stability": 0.02
+        "stability": 0.017531286373118484
     },
     {
         "ranked_list": [
             {
-                "user_id": 151208049,
-                "name": "A.A AL",
-                "rank": 0.8235660502696733,
-                "blitz_win": 0.004667620266506,
-                "rapid_win": 1.0
+                "user_id": 11177810,
+                "name": "Fabiano Caruana",
+                "current_rapid_rating": 2794.0,
+                "current_blitz_rating": 3125.0
             },
             {
-                "user_id": 1343066,
-                "name": "Andrey Gorovets",
-                "rank": 0.4578778577517959,
-                "blitz_win": 0.2260784461341564,
-                "rapid_win": 0.5078196872125115
+                "user_id": 15448422,
+                "name": "Hikaru Nakamura",
+                "current_rapid_rating": 2781.0,
+                "current_blitz_rating": 3232.0
             },
             {
-                "user_id": 4262684,
-                "name": "Bogdan Lalic",
-                "rank": 0.4558841946142512,
-                "blitz_win": 0.022685638284524,
-                "rapid_win": 0.5492180312787489
+                "user_id": 42022994,
+                "name": "Alireza Firouzja",
+                "current_rapid_rating": 2715.0,
+                "current_blitz_rating": 3100.0
             },
             {
-                "user_id": 8344034,
-                "name": "Andrew Tang",
-                "rank": 0.4411869290694754,
-                "blitz_win": 0.0806795653592311,
-                "rapid_win": 0.5188592456301748
+                "user_id": 17306408,
+                "name": "Maxime Vachier-Lagrave",
+                "current_rapid_rating": 2754.0,
+                "current_blitz_rating": 3127.0
             },
             {
-                "user_id": 2406471,
-                "name": "Rogelio Jr Antonio",
-                "rank": 0.3952454547729346,
-                "blitz_win": 1.0,
-                "rapid_win": 0.2649494020239191
+                "user_id": 30209744,
+                "name": "Rauf Mamedov",
+                "current_rapid_rating": 2673.0,
+                "current_blitz_rating": 3198.0
             }
         ],
         "ranking_function": {
-            "w1": 0.1772613383456569,
-            "w2": 0.8227386616543432
+            "w1": 0.36276471782416986,
+            "w2": 0.6372352821758301
         },
-        "stability": 0.02
+        "stability": 0.017146225761614887
     },
     {
         "ranked_list": [
             {
-                "user_id": 151208049,
-                "name": "A.A AL",
-                "rank": 0.9977989033896006,
-                "blitz_win": 0.004667620266506,
-                "rapid_win": 1.0
+                "user_id": 11177810,
+                "name": "Fabiano Caruana",
+                "current_rapid_rating": 2794.0,
+                "current_blitz_rating": 3125.0
             },
             {
-                "user_id": 4262684,
-                "name": "Bogdan Lalic",
-                "rank": 0.5480536477129341,
-                "blitz_win": 0.022685638284524,
-                "rapid_win": 0.5492180312787489
+                "user_id": 15448422,
+                "name": "Hikaru Nakamura",
+                "current_rapid_rating": 2781.0,
+                "current_blitz_rating": 3232.0
             },
             {
-                "user_id": 8344034,
-                "name": "Andrew Tang",
-                "rank": 0.5178902469030878,
-                "blitz_win": 0.0806795653592311,
-                "rapid_win": 0.5188592456301748
+                "user_id": 17306408,
+                "name": "Maxime Vachier-Lagrave",
+                "current_rapid_rating": 2754.0,
+                "current_blitz_rating": 3127.0
             },
             {
-                "user_id": 1343066,
-                "name": "Andrey Gorovets",
-                "rank": 0.5071966393710323,
-                "blitz_win": 0.2260784461341564,
-                "rapid_win": 0.5078196872125115
+                "user_id": 85851574,
+                "name": "Anish Giri",
+                "current_rapid_rating": 2948.0,
+                "current_blitz_rating": 3009.0
             },
             {
-                "user_id": 31622756,
-                "name": "Rasmus Svane",
-                "rank": 0.4536366198402149,
-                "blitz_win": 0.0813069336746217,
-                "rapid_win": 0.4544618215271389
+                "user_id": 30209744,
+                "name": "Rauf Mamedov",
+                "current_rapid_rating": 2673.0,
+                "current_blitz_rating": 3198.0
             }
         ],
         "ranking_function": {
-            "w1": 0.002211418673015225,
-            "w2": 0.9977885813269848
+            "w1": 0.6306589064533261,
+            "w2": 0.36934109354667394
         },
-        "stability": 0.02
+        "stability": 0.01489683562818745
     },
     {
         "ranked_list": [
             {
-                "user_id": 151208049,
-                "name": "A.A AL",
-                "rank": 0.8776300425069589,
-                "blitz_win": 0.004667620266506,
-                "rapid_win": 1.0
+                "user_id": 11177810,
+                "name": "Fabiano Caruana",
+                "current_rapid_rating": 2794.0,
+                "current_blitz_rating": 3125.0
             },
             {
-                "user_id": 4262684,
-                "name": "Bogdan Lalic",
-                "rank": 0.48448413146664343,
-                "blitz_win": 0.022685638284524,
-                "rapid_win": 0.5492180312787489
+                "user_id": 15448422,
+                "name": "Hikaru Nakamura",
+                "current_rapid_rating": 2781.0,
+                "current_blitz_rating": 3232.0
             },
             {
-                "user_id": 1343066,
-                "name": "Andrey Gorovets",
-                "rank": 0.47318134488908953,
-                "blitz_win": 0.2260784461341564,
-                "rapid_win": 0.5078196872125115
+                "user_id": 17306408,
+                "name": "Maxime Vachier-Lagrave",
+                "current_rapid_rating": 2754.0,
+                "current_blitz_rating": 3127.0
             },
             {
-                "user_id": 8344034,
-                "name": "Andrew Tang",
-                "rank": 0.464987765167109,
-                "blitz_win": 0.0806795653592311,
-                "rapid_win": 0.5188592456301748
+                "user_id": 85851574,
+                "name": "Anish Giri",
+                "current_rapid_rating": 2948.0,
+                "current_blitz_rating": 3009.0
             },
             {
-                "user_id": 31622756,
-                "name": "Rasmus Svane",
-                "rank": 0.40858473695257735,
-                "blitz_win": 0.0813069336746217,
-                "rapid_win": 0.4544618215271389
+                "user_id": 26303484,
+                "name": "Vladimir Fedoseev",
+                "current_rapid_rating": 2778.0,
+                "current_blitz_rating": 3064.0
             }
         ],
         "ranking_function": {
-            "w1": 0.12294381252401967,
-            "w2": 0.8770561874759802
+            "w1": 0.846775624629497,
+            "w2": 0.1532243753705031
         },
-        "stability": 0.02
+        "stability": 0.014626300351531856
     },
     {
         "ranked_list": [
             {
-                "user_id": 151208049,
-                "name": "A.A AL",
-                "rank": 0.8740728636745274,
-                "blitz_win": 0.004667620266506,
-                "rapid_win": 1.0
+                "user_id": 11177810,
+                "name": "Fabiano Caruana",
+                "current_rapid_rating": 2794.0,
+                "current_blitz_rating": 3125.0
             },
             {
-                "user_id": 4262684,
-                "name": "Bogdan Lalic",
-                "rank": 0.482602378274358,
-                "blitz_win": 0.022685638284524,
-                "rapid_win": 0.5492180312787489
+                "user_id": 15448422,
+                "name": "Hikaru Nakamura",
+                "current_rapid_rating": 2781.0,
+                "current_blitz_rating": 3232.0
             },
             {
-                "user_id": 1343066,
-                "name": "Andrey Gorovets",
-                "rank": 0.4721744410654088,
-                "blitz_win": 0.2260784461341564,
-                "rapid_win": 0.5078196872125115
+                "user_id": 17306408,
+                "name": "Maxime Vachier-Lagrave",
+                "current_rapid_rating": 2754.0,
+                "current_blitz_rating": 3127.0
             },
             {
-                "user_id": 8344034,
-                "name": "Andrew Tang",
-                "rank": 0.46342177222324565,
-                "blitz_win": 0.0806795653592311,
-                "rapid_win": 0.5188592456301748
+                "user_id": 85851574,
+                "name": "Anish Giri",
+                "current_rapid_rating": 2948.0,
+                "current_blitz_rating": 3009.0
             },
             {
-                "user_id": 31622756,
-                "name": "Rasmus Svane",
-                "rank": 0.40725113352992703,
-                "blitz_win": 0.0813069336746217,
-                "rapid_win": 0.4544618215271389
+                "user_id": 26303484,
+                "name": "Vladimir Fedoseev",
+                "current_rapid_rating": 2778.0,
+                "current_blitz_rating": 3064.0
             }
         ],
         "ranking_function": {
-            "w1": 0.12651767277900708,
-            "w2": 0.873482327220993
+            "w1": 0.7430032142328701,
+            "w2": 0.25699678576713
         },
-        "stability": 0.02
+        "stability": 0.01317646096716641
     },
     {
         "ranked_list": [
             {
-                "user_id": 151208049,
-                "name": "A.A AL",
-                "rank": 0.9754227787546916,
-                "blitz_win": 0.004667620266506,
-                "rapid_win": 1.0
+                "user_id": 11177810,
+                "name": "Fabiano Caruana",
+                "current_rapid_rating": 2794.0,
+                "current_blitz_rating": 3125.0
             },
             {
-                "user_id": 4262684,
-                "name": "Bogdan Lalic",
-                "rank": 0.536216642618103,
-                "blitz_win": 0.022685638284524,
-                "rapid_win": 0.5492180312787489
+                "user_id": 15448422,
+                "name": "Hikaru Nakamura",
+                "current_rapid_rating": 2781.0,
+                "current_blitz_rating": 3232.0
             },
             {
-                "user_id": 8344034,
-                "name": "Andrew Tang",
-                "rank": 0.5080395042387604,
-                "blitz_win": 0.0806795653592311,
-                "rapid_win": 0.5188592456301748
+                "user_id": 17306408,
+                "name": "Maxime Vachier-Lagrave",
+                "current_rapid_rating": 2754.0,
+                "current_blitz_rating": 3127.0
             },
             {
-                "user_id": 1343066,
-                "name": "Andrey Gorovets",
-                "rank": 0.5008627982808316,
-                "blitz_win": 0.2260784461341564,
-                "rapid_win": 0.5078196872125115
+                "user_id": 85851574,
+                "name": "Anish Giri",
+                "current_rapid_rating": 2948.0,
+                "current_blitz_rating": 3009.0
             },
             {
-                "user_id": 31622756,
-                "name": "Rasmus Svane",
-                "rank": 0.44524770328457236,
-                "blitz_win": 0.0813069336746217,
-                "rapid_win": 0.4544618215271389
+                "user_id": 30209744,
+                "name": "Rauf Mamedov",
+                "current_rapid_rating": 2673.0,
+                "current_blitz_rating": 3198.0
             }
         ],
         "ranking_function": {
-            "w1": 0.02469247634834215,
-            "w2": 0.9753075236516578
+            "w1": 0.6893938845292669,
+            "w2": 0.3106061154707332
         },
-        "stability": 0.02
+        "stability": 0.011700515871073156
     },
     {
         "ranked_list": [
             {
-                "user_id": 151208049,
-                "name": "A.A AL",
-                "rank": 0.7880966131087215,
-                "blitz_win": 0.004667620266506,
-                "rapid_win": 1.0
+                "user_id": 11177810,
+                "name": "Fabiano Caruana",
+                "current_rapid_rating": 2794.0,
+                "current_blitz_rating": 3125.0
             },
             {
-                "user_id": 1343066,
-                "name": "Andrey Gorovets",
-                "rank": 0.4478377912880152,
-                "blitz_win": 0.2260784461341564,
-                "rapid_win": 0.5078196872125115
+                "user_id": 15448422,
+                "name": "Hikaru Nakamura",
+                "current_rapid_rating": 2781.0,
+                "current_blitz_rating": 3232.0
             },
             {
-                "user_id": 4262684,
-                "name": "Bogdan Lalic",
-                "rank": 0.4371208066176558,
-                "blitz_win": 0.022685638284524,
-                "rapid_win": 0.5492180312787489
+                "user_id": 17306408,
+                "name": "Maxime Vachier-Lagrave",
+                "current_rapid_rating": 2754.0,
+                "current_blitz_rating": 3127.0
             },
             {
-                "user_id": 8344034,
-                "name": "Andrew Tang",
-                "rank": 0.4255720581469221,
-                "blitz_win": 0.0806795653592311,
-                "rapid_win": 0.5188592456301748
+                "user_id": 85851574,
+                "name": "Anish Giri",
+                "current_rapid_rating": 2948.0,
+                "current_blitz_rating": 3009.0
             },
             {
-                "user_id": 2406471,
-                "name": "Rogelio Jr Antonio",
-                "rank": 0.4214395498570446,
-                "blitz_win": 1.0,
-                "rapid_win": 0.2649494020239191
+                "user_id": 30209744,
+                "name": "Rauf Mamedov",
+                "current_rapid_rating": 2673.0,
+                "current_blitz_rating": 3198.0
             }
         ],
         "ranking_function": {
-            "w1": 0.21289710975545365,
-            "w2": 0.7871028902445464
+            "w1": 0.4752164216214676,
+            "w2": 0.5247835783785323
         },
-        "stability": 0.01
+        "stability": 0.01153913150117955
     },
     {
         "ranked_list": [
             {
-                "user_id": 151208049,
-                "name": "A.A AL",
-                "rank": 0.9678360274014145,
-                "blitz_win": 0.004667620266506,
-                "rapid_win": 1.0
+                "user_id": 11177810,
+                "name": "Fabiano Caruana",
+                "current_rapid_rating": 2794.0,
+                "current_blitz_rating": 3125.0
             },
             {
-                "user_id": 4262684,
-                "name": "Bogdan Lalic",
-                "rank": 0.532203239230018,
-                "blitz_win": 0.022685638284524,
-                "rapid_win": 0.5492180312787489
+                "user_id": 15448422,
+                "name": "Hikaru Nakamura",
+                "current_rapid_rating": 2781.0,
+                "current_blitz_rating": 3232.0
             },
             {
-                "user_id": 8344034,
-                "name": "Andrew Tang",
-                "rank": 0.5046995543386434,
-                "blitz_win": 0.0806795653592311,
-                "rapid_win": 0.5188592456301748
+                "user_id": 17306408,
+                "name": "Maxime Vachier-Lagrave",
+                "current_rapid_rating": 2754.0,
+                "current_blitz_rating": 3127.0
             },
             {
-                "user_id": 1343066,
-                "name": "Andrey Gorovets",
-                "rank": 0.49871527370959495,
-                "blitz_win": 0.2260784461341564,
-                "rapid_win": 0.5078196872125115
+                "user_id": 85851574,
+                "name": "Anish Giri",
+                "current_rapid_rating": 2948.0,
+                "current_blitz_rating": 3009.0
             },
             {
-                "user_id": 31622756,
-                "name": "Rasmus Svane",
-                "rank": 0.44240339377747573,
-                "blitz_win": 0.0813069336746217,
-                "rapid_win": 0.4544618215271389
+                "user_id": 30209744,
+                "name": "Rauf Mamedov",
+                "current_rapid_rating": 2673.0,
+                "current_blitz_rating": 3198.0
             }
         ],
         "ranking_function": {
-            "w1": 0.03231480584123834,
-            "w2": 0.9676851941587618
+            "w1": 0.6034389389282347,
+            "w2": 0.3965610610717653
         },
-        "stability": 0.01
+        "stability": 0.010871238918690393
     }
 ]

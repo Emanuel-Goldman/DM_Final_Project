@@ -45,7 +45,7 @@ def validate_input(columns: List[str], cleaned_df: pd.DataFrame):
 def find_angle(a1: float, a2: float) -> float:
     """Returns the angle created by the line 'a1*w1=a2*w2' and the w2-axis"""
     
-    return float(np.degrees(np.arctan2(a2, a1)))
+    return float(np.degrees(np.arctan2(a1, a2)))
 
 def from_angle_to_vector(angle: float) -> Tuple[float, float]:
     """
@@ -75,17 +75,32 @@ def compute_interest_region(constraints: List[Constraint]) -> (Region | None):
     theta_min = 0
     theta_max = 90
 
-    for a1, a2, op in constraints:
-        # Compute the angle of the line defined by a1 * w1 = a2 * w2
+    # for a1, a2, op in constraints:
+    #     # Compute the angle of the line defined by a1 * w1 = a2 * w2
+    #     angle = find_angle(a1, a2)
+
+    #     print(f"The angle for constraint {a1}*w1={a2}*w2 is {angle}") # DEBUG
+
+    #     # Update the feasible region based on the constraint operator
+    #     if op in ("<=", "<", "=<"): 
+    #         theta_max = min(theta_max, angle)
+    #     elif op in (">=", ">", "=>"):
+    #         theta_min = max(theta_min, angle)
+
+    for constraint in constraints:
+        print(f"Constraint: {constraint}")  # Print entire constraint object
+        a1, a2, op = constraint
+        print(f"Parsed values -> a1: {a1}, a2: {a2}, op: '{op}'")  
+
         angle = find_angle(a1, a2)
+        print(f"find_angle({a1}, {a2}) = {angle}")
 
-        print(f"The angle for constraint {a1}*w1={a2}*w2 is {angle}") # DEBUG
-
-        # Update the feasible region based on the constraint operator
         if op in ("<=", "<", "=<"): 
-            theta_max = min(theta_max, angle)
-        elif op in (">=", ">", "=>"):
             theta_min = max(theta_min, angle)
+        elif op in (">=", ">", "=>"):
+            theta_max = min(theta_max, angle)
+
+    print(f"Updated region -> theta_min: {theta_min}, theta_max: {theta_max}")
 
     # Check if the feasible region is empty (min >= max) and raise an error if so
     if theta_min >= theta_max:
@@ -120,7 +135,7 @@ def process_raysweeping(interest_region: Region, columns: List[str], num_of_rank
         final_df = ranking.loc[:num_ret_tuples-1, ["user_id", "name", "rank", columns[0], columns[1]]]
 
         # Format the ranking output and add it to the results list
-        results.append(format_ranking_output(final_df, ranking_function, stability))
+        results.append(format_ranking_output(final_df, ranking_function, stability, columns))
 
     return results
 
@@ -162,15 +177,19 @@ def process_randomized_rounding(interest_region: Region, columns: List[str], num
 
         # Select only the top `num_ret_tuples` players with relevant columns
         final_df = ranking.loc[:num_ret_tuples-1, ["user_id", "name", "rank", columns[0], columns[1]]]
-        results.append(format_ranking_output(final_df, ranking_function, stability))
+        results.append(format_ranking_output(final_df, ranking_function, stability, columns))
 
     return results
 
-def format_ranking_output(final_df: pd.DataFrame, ranking_function: Tuple[float, float], stability: float):
-    """Formats ranking output into dictionary format."""
+def format_ranking_output(final_df: pd.DataFrame, ranking_function: Tuple[float, float], stability: float, columns: List[str]) -> dict:
+    """Formats ranking output into dictionary format using original_df for values."""
+
+    # Select relevant data from original_df using user_ids from final_df
+    user_ids = final_df['user_id'].values
+    original_data = original_df[original_df['user_id'].isin(user_ids)][['user_id', 'name', *columns]]
 
     return {
-        "ranked_list": final_df.to_dict(orient="records"),
+        "ranked_list": original_data.to_dict(orient="records"),
         "ranking_function": {"w1": ranking_function[0], "w2": ranking_function[1]},
         "stability": stability
     }
@@ -193,7 +212,7 @@ def sort_data(constraints: List[Constraint], algorithm: str, columns: List[str],
     # Ensures input columns exist in the dataset and are exactly two
     validate_input(columns, cleaned_df)
 
-    # Computes the feasible region of ranking functions
+    # Computes the interest region of ranking functions
     interest_region = compute_interest_region(constraints)
 
     # Handle sorting based on the selected ranking algorithm

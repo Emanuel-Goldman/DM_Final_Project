@@ -49,8 +49,9 @@ export const Results: React.FC<ResultsProps> = ({ rankingResults }) => {
                         id: "insights",
                         label: "Insights",
                         content: (
-                            <SpaceBetween size="xl">
+                            <SpaceBetween size="m">
                                 {/* Stability Score Bar Chart */}
+                                <Header variant="h3">Stability score comparison</Header>
                                 <BarChart
                                     series={[
                                         {
@@ -67,6 +68,7 @@ export const Results: React.FC<ResultsProps> = ({ rankingResults }) => {
                                 />
 
                                 {/* Weight Function Bar Chart */}
+                                <Header variant="h3">Weight function comparison</Header>
                                 <BarChart
                                     series={[
                                         {
@@ -87,7 +89,14 @@ export const Results: React.FC<ResultsProps> = ({ rankingResults }) => {
                                 />
                                 {/* Table for ranked users */}
                                 <Table
-                                    header={<Header variant="h3">Ranked Users</Header>}
+                                    header={
+                                        <Header 
+                                            variant="h3"
+                                            description="A user appears in 'Rank i' if he was ranked in the i-th place by some ranking."
+                                        >
+                                            Ranked Users
+                                        </Header>
+                                    }
                                     columnDefinitions={[
                                         {
                                             id: 'position',

@@ -28,7 +28,7 @@ export const RankingSettingsSection: React.FC = () => {
     } = useConstraintInput();
     const [tupleLimit, setTupleLimit] = useState<string>('5');
     const [rankingCount, setRankingCount] = useState<string>('10');
-    const [sampleCount, setSampleCount] = useState<string>('1000');
+    const [sampleCount, setSampleCount] = useState<string>('100');
     
     const [error, setError] = useState<string | null>(null);
 
