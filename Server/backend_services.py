@@ -41,10 +41,24 @@ def find_angle(a1: float, a2: float) -> float:
     
     return np.degrees(np.arctan2(a2, a1))
 
-def find_feasible_angle_region(constraints: List[Constraint]) -> (Tuple[int, int] | None):
+    # If the feasible region is empty (min >= max), return None
+    return (theta_min, theta_max) if theta_min < theta_max else None
+
+def from_angle_to_vector(angle) -> List[float]:
+    w_1 = math.cos(math.radians(angle))
+    w_2 = math.sin(math.radians(angle))
+    
+    # Normalize to make sure w_1 + w_2 = 1
+    total = w_1 + w_2
+    return [w_1 / total, w_2 / total]
+
+def compute_feasible_region(constraints: List[Constraint]) -> (Tuple[int, int] | None):
     """
-    Returns a tuple (theta_min, theta_max) representing the valid range of angles based on constraints of the form:
-    `a1 * w1 op a2 * w2`, where `op` is a comparison operator (e.g., `<=`, `>=`, `<`, `>`).
+    Computes and returns a tuple (theta_min, theta_max) representing the valid range of angles 
+    based on constraints of the form: `a1 * w1 op a2 * w2`, 
+    where `op` is a comparison operator (e.g., `<=`, `>=`, `<`, `>`).
+    
+    Raises a ValueError if no feasible region is found due to infeasible constraints.
     """
 
     # Initialize the feasible region to the full range of angles (0° to 90°) in the first quadrant
@@ -61,24 +75,12 @@ def find_feasible_angle_region(constraints: List[Constraint]) -> (Tuple[int, int
         elif op in (">=", ">"):
             theta_min = max(theta_min, angle)
 
-    # If the feasible region is empty (min >= max), return None
-    return (theta_min, theta_max) if theta_min < theta_max else None
-
-def from_angle_to_vector(angle) -> List[float]:
-    w_1 = math.cos(math.radians(angle))
-    w_2 = math.sin(math.radians(angle))
-    
-    # Normalize to make sure w_1 + w_2 = 1
-    total = w_1 + w_2
-    return [w_1 / total, w_2 / total]
-
-def compute_feasible_region(constraints: List[Constraint]) -> (Tuple[int, int] | None):
-    """ Computes the feasible angle region based on constraints. Raises an error if infeasible. """
-
-    region_in_angles = find_feasible_angle_region(constraints)
-    if region_in_angles is None:
+    # Check if the feasible region is empty (min >= max) and raise an error if so
+    if theta_min >= theta_max:
         raise ValueError("No feasible region found - Infeasible constraints")
-    return region_in_angles
+
+    # Return the valid region of angles
+    return (theta_min, theta_max)
 
 def process_ray_sweeping(region_in_angles, columns, num_of_rankings, num_ret_tuples):
     """ Processes the ranking using the Ray Sweeping method and returns results. """
