@@ -75,12 +75,10 @@ def from_angle_to_vector(angle) -> List[float]:
 def compute_feasible_region(constraints: List[Constraint]) -> (Tuple[int, int] | None):
     """ Computes the feasible angle region based on constraints. Raises an error if infeasible. """
 
-    if constraints:
-        region_in_angles = find_feasible_angle_region(constraints)
-        if region_in_angles is None:
-            raise ValueError("No feasible region found - Infeasible constraints")
-        return region_in_angles
-    return None
+    region_in_angles = find_feasible_angle_region(constraints)
+    if region_in_angles is None:
+        raise ValueError("No feasible region found - Infeasible constraints")
+    return region_in_angles
 
 def process_ray_sweeping(region_in_angles, columns, num_of_rankings, num_ret_tuples):
     """ Processes the ranking using the Ray Sweeping method and returns results. """

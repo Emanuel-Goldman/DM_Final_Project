@@ -19,6 +19,10 @@ export const useConstraintInput = () => {
      * Example: '2*w1>=3*w2' --> [2,3,>=]
      */
     const parseConstraints = () => {
+        if (constraints == "") {
+            return [];
+        }
+        
         const lines = constraints.split("\n"); // Split input into lines
         const parsed: ConstraintItem[] = [];
 
