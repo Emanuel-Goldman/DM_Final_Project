@@ -1,4 +1,4 @@
-import { Alert, Container, Header, Spinner, Table, TextContent } from "@cloudscape-design/components";
+import { Alert, ExpandableSection, Header, SpaceBetween, Spinner, Table, TextContent } from "@cloudscape-design/components";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { API_ENDPOINT, PORT, RESOURCES } from "../consts/apiConsts";
@@ -30,41 +30,39 @@ export const DatasetPreviewSection : React.FC = () => {
     }, []);
     
     return (
-        <div>
-            <Container
-                header={<Header variant="h2">Dataset description and preview</Header>}
-                variant="stacked"
-            >
+        <ExpandableSection
+            header={<Header variant="h3">Dataset description and preview</Header>}
+            variant="footer"
+        >
+            <SpaceBetween size="m">
                 <TextContent>
                     <p>
                         The <a href="https://www.kaggle.com/datasets/crxxom/chess-gm-players/data">Chess All GM players Statistics 2023</a> dataset contains statistics of all Grandmaster (GM) titled players on Chess.com as of July 17, 2023. 
                         It includes details like usernames, ratings (FIDE, rapid, blitz, bullet), game history, and other relevant data. 
                     </p>
                 </TextContent>
-            </Container>
-            {loading && <Spinner />}
-            {error && <Alert type="error">{error}</Alert>}
-            {!loading && !error && (
-                <Table
-                    variant="stacked"
-                    header={
-                    <Header variant="h3">Preview</Header>
-                    }
-                    columnDefinitions={
-                        sample.length > 0
-                            ? Object.keys(sample[0]).map((key) => ({
-                                id: key,
-                                header: key,
-                                cell: (item: any) => item[key],
-                            }))
-                            : []
-                    }
-                    items={sample}
-                    sortingDisabled
-                    stripedRows
-                    loadingText="Loading dataset preview..."
-                />
-            )}
-        </div>
+                {loading && <Spinner />}
+                {error && <Alert type="error">{error}</Alert>}
+                {!loading && !error && (
+                    <Table
+                        variant="embedded"
+                        header={<h4>Preview</h4>}
+                        columnDefinitions={
+                            sample.length > 0
+                                ? Object.keys(sample[0]).map((key) => ({
+                                    id: key,
+                                    header: key,
+                                    cell: (item: any) => item[key],
+                                }))
+                                : []
+                        }
+                        items={sample}
+                        sortingDisabled
+                        stripedRows
+                        loadingText="Loading dataset preview..."
+                    />
+                )}
+            </SpaceBetween>
+        </ExpandableSection>
     );
 }

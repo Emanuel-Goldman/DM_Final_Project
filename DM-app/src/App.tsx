@@ -2,7 +2,6 @@ import "@cloudscape-design/global-styles/index.css"
 import { ContentLayout, Header, SpaceBetween } from "@cloudscape-design/components";
 import { AboutSection } from "./components/AboutSection";
 import { RankingSettingsSection } from "./components/RankingSettingsSection";
-import { DatasetPreviewSection } from "./components/DatasetPreviewSection";
 
 function App() {
   return (
@@ -20,7 +19,6 @@ function App() {
     >
       <SpaceBetween size="m">
         <AboutSection/>
-        <DatasetPreviewSection/>
         <RankingSettingsSection/>
       </SpaceBetween>
     </ContentLayout>

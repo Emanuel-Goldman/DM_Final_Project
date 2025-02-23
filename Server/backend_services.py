@@ -361,7 +361,7 @@ def find_ranking(weights: Tuple[float, float], columns: List[str]) -> pd.DataFra
     df_ranked = df_ranked.sort_values(by="rank", ascending=False)
     return df_ranked
 
-def get_columns_names() -> list[str]:
+def get_columns_names() -> List[str]:
     """Returns a list of column names in the cleaned DataFrame"""
 
     return cleaned_df.columns.tolist()

@@ -28,6 +28,7 @@ export const RankingSettingsSection: React.FC = () => {
     } = useConstraintInput();
     const [tupleLimit, setTupleLimit] = useState<string>('5');
     const [rankingCount, setRankingCount] = useState<string>('10');
+    const [sampleCount, setSampleCount] = useState<string>('1000');
     
     const [error, setError] = useState<string | null>(null);
 
@@ -67,7 +68,8 @@ export const RankingSettingsSection: React.FC = () => {
                 method: algorithm?.value,
                 columns: [firstAttr?.value, secondAttr?.value],
                 num_ret_tuples: parseInt(tupleLimit, 10),
-                num_of_rankings: parseInt(rankingCount, 10)
+                num_of_rankings: parseInt(rankingCount, 10),
+                num_of_samples: parseInt(sampleCount, 10)
             };
 
             const res = await axios.post(`${API_ENDPOINT}:${PORT}/${RESOURCES.RANKING}`, data);
@@ -135,10 +137,24 @@ export const RankingSettingsSection: React.FC = () => {
                                 type="number"
                             />
                         </FormField>
+                        <FormField 
+                            label="Sample count"
+                            description="Number of samples to draw from the region"
+                        >
+                            <Input
+                                onChange={({ detail }) => setSampleCount(detail.value)}
+                                value={sampleCount}
+                                inputMode="numeric"
+                                type="number"
+                                disabled={!algorithm || algorithm.value != "randomized-rounding"}
+                            />
+                        </FormField>
                     </SpaceBetween>
                     <FormField 
-                        label={"Constraints"}
-                        description={`Expected format: "number*w1 operator number*w2" (without spaces). Example: 1*w1>=2*w2. Every constraint should appear in a separate line.`}
+                        label={
+                            <span>Constraints <i>- optional</i>{" "}</span>
+                        }
+                        description={`Should follow this structure: number*w1 operator number*w2 (e.g., 1*w1>=2*w2), with each constraint on a new line.`}
                     >
                         {constraintError && <Alert type="error">{constraintError}</Alert>}
                         <Textarea

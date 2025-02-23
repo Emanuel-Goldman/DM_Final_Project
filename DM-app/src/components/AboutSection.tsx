@@ -1,18 +1,21 @@
 import { Container, Header, TextContent } from "@cloudscape-design/components";
+import { DatasetPreviewSection } from "./DatasetPreviewSection";
 
 export const AboutSection: React.FC = () => {
     return (
         <Container
             header={<Header variant="h2">About</Header>}
+            footer={<DatasetPreviewSection/>}
         >
             <TextContent>
                 <p>Welcome to the <strong>Stable Chess GM Rankings</strong> application! This interactive tool is designed to compute and analyze stable rankings of Grandmaster chess players based on the framework outlined in <i>On Obtaining Stable Rankings</i>  (Asudeh etal., PVLDB 2018).</p>
 
                 <br/>
                 <h4>How to Use</h4>
+                <p>In the <i>Ranking settings</i> section below:</p>
                 <ol>
                     <li><strong>Select Attributes</strong>: Choose two scoring attributes from the provided list.</li>
-                    <li><strong>Pick an Algorithm</strong>: Select a ranking algorithm that best suits your analysis needs.</li>
+                    <li><strong>Pick an Algorithm</strong>: Select a ranking algorithm:</li>
                     <ol type="i">
                         <li><strong>Raysweeping</strong>: A deterministic method that utilizes a geometric approach to analyze the dataset in dual space. It works by representing rankings as regions within a weight space, allowing for a visual interpretation of ranking stability.</li>
                         <li><strong>Randomized rounding</strong>: Randomly samples from the weight space to generate rankings, using Bernoulli random variables to influence the selection process. By iteratively refining the selection based on stability measurements, it can efficiently identify stable rankings even in larger, more complex datasets.</li>
