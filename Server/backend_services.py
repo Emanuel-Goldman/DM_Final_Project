@@ -44,13 +44,20 @@ def find_angle(a1: float, a2: float) -> float:
     # If the feasible region is empty (min >= max), return None
     return (theta_min, theta_max) if theta_min < theta_max else None
 
-def from_angle_to_vector(angle) -> List[float]:
-    w_1 = math.cos(math.radians(angle))
-    w_2 = math.sin(math.radians(angle))
+def from_angle_to_vector(angle: int) -> Tuple[float, float]:
+    """
+    Converts an angle in degrees to a 2D vector on the unit circle.
+
+    Returns a tuple containing the normalized vector components (w1, w2),
+    where w1 and w2 represent the cosine and sine of the angle, respectively.
+    """
+
+    w1 = math.cos(math.radians(angle))
+    w2 = math.sin(math.radians(angle))
     
-    # Normalize to make sure w_1 + w_2 = 1
-    total = w_1 + w_2
-    return [w_1 / total, w_2 / total]
+    # Normalize to make sure w1 + w2 = 1
+    total = w1 + w2
+    return [w1 / total, w2 / total]
 
 def compute_feasible_region(constraints: List[Constraint]) -> (Tuple[int, int] | None):
     """
@@ -82,8 +89,8 @@ def compute_feasible_region(constraints: List[Constraint]) -> (Tuple[int, int] |
     # Return the valid region of angles
     return (theta_min, theta_max)
 
-def process_ray_sweeping(region_in_angles, columns, num_of_rankings, num_ret_tuples):
-    """ Processes the ranking using the Ray Sweeping method and returns results. """
+def process_raysweeping(region_in_angles, columns, num_of_rankings, num_ret_tuples):
+    """Processes the ranking using the Ray Sweeping method and returns results."""
 
     ranking_heap = ray_sweeping(region_in_angles, columns)
     results = []
@@ -134,35 +141,28 @@ def save_results_to_json(results, filename="res.json"):
     with open(filename, "w") as file:
         json.dump(results, file, indent=4)
 
-def sort_data(constraints: list, method: str, columns: list[str], num_ret_tuples: int, num_of_rankings: int, num_of_samples: int = None, k_sample: int = None) -> tuple[pd.DataFrame, float]:
+def sort_data(constraints: List[Constraint], algorithm: str, columns: List[str], num_ret_tuples: int, num_of_rankings: int, num_of_samples: int = None, k_sample: int = None) -> tuple[pd.DataFrame, float]:
     """
     Sorts the data based on the constraints and method provided.
 
-    Parameters:
-        constraints (list): List of constraints that define the feasible ranking region.
-        method (str): Sorting method, either "raysweeping" or "randomized-rounding".
-        columns (list): List containing exactly two column names to be used for ranking.
-        num_ret_tuples (int): Number of top-ranked tuples to return.
-        num_of_rankings (int): Number of top stable rankings to compute.
-        num_of_samples (int, optional): Number of samples used in randomized rounding (only applicable for "randomized-rounding").
-        k_sample (int, optional): Maximum sample size for randomized ranking.
-
-    Returns:
-        tuple[pd.DataFrame, float]: A tuple containing:
-            - The ranked DataFrame.
-            - The stability score of the ranking.
+    Returns a tuple containing:
+        - The ranked DataFrame.
+        - The stability score of the ranking.
     """
 
+    # Ensures input columns exist in the dataset and are exactly two
     validate_input(columns, cleaned_df)
-    region_in_angles = compute_feasible_region(constraints)
 
-    # Handle sorting based on the selected method
-    if method == "raysweeping":
-        results = process_ray_sweeping(region_in_angles, columns, num_of_rankings, num_ret_tuples)
-    elif method == "randomized-rounding":
-        results = process_randomized_rounding(region_in_angles, columns, num_of_rankings, num_ret_tuples, num_of_samples, k_sample)
+    # Computes the feasible region of ranking functions
+    region = compute_feasible_region(constraints)
+
+    # Handle sorting based on the selected ranking algorithm
+    if algorithm == "raysweeping":
+        results = process_raysweeping(region, columns, num_of_rankings, num_ret_tuples)
+    elif algorithm == "randomized-rounding":
+        results = process_randomized_rounding(region, columns, num_of_rankings, num_ret_tuples, num_of_samples, k_sample)
     else:
-        raise ValueError(f"Invalid method provided - {method}, choose from 'raysweeping' or 'randomized-rounding'")
+        raise ValueError(f"Invalid method provided - {algorithm}, choose from 'raysweeping' or 'randomized-rounding'")
     
     save_results_to_json(results)
     return results
@@ -230,19 +230,19 @@ def compute_first_quadrant_angle(item_1, item_2, columns):
     
     return angle
     
-def ray_sweeping(region_in_angles : list, columns : str) -> pd.DataFrame:
+def ray_sweeping(region: Tuple[int,int], columns: List[str]) -> pd.DataFrame:
 
-    init_rank = find_ranking(from_angle_to_vector(region_in_angles[0]), columns)
+    init_rank = find_ranking(from_angle_to_vector(region[0]), columns)
     min_heap = []
 
     for i in range(len(init_rank)-1):
-        angle = calculate_exchange_ordering_angle(region_in_angles, [i, i+1], columns)
+        angle = calculate_exchange_ordering_angle(region, [i, i+1], columns)
         if angle is not None:
             heapq.heappush(min_heap, (angle, [i, i+1]))
 
-    old_angle = float(region_in_angles[0])  # Convert to Python float
+    old_angle = float(region[0])  # Convert to Python float
     max_heap = []
-    range_area = float(region_in_angles[1]) - old_angle  # Ensure subtraction is between Python floats
+    range_area = float(region[1]) - old_angle  # Ensure subtraction is between Python floats
 
     while len(min_heap) > 0:
         angle, indexes = heapq.heappop(min_heap)
