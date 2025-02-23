@@ -11,7 +11,7 @@ function App() {
       header={
         <Header
           variant="h1"
-          description="By Dana Goldberg and Emanuel Goldman"
+          description="by Dana Goldberg and Emanuel Goldman"
         >
           Stable Chess GM Rankings
         </Header>
