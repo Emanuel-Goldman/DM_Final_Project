@@ -95,6 +95,8 @@ cd /DM_FINAL_PROJECT/DM-app
 npm run dev
 ```
 
+The app will be now accessible at `http://localhost:5173/`.
+
 ## Endpoints
 
 ### 1. Get Column Names
