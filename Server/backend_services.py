@@ -92,7 +92,7 @@ def compute_feasible_region(constraints: List[Constraint]) -> (Tuple[int, int] |
 def process_raysweeping(region_in_angles, columns, num_of_rankings, num_ret_tuples):
     """Processes the ranking using the Ray Sweeping method and returns results."""
 
-    ranking_heap = ray_sweeping(region_in_angles, columns)
+    ranking_heap = compute_raysweeping_heap(region_in_angles, columns)
     results = []
 
     for _ in range(num_of_rankings):
@@ -182,7 +182,7 @@ def get_ranking_stability(W1, W2, columns):
 
     for i in range(len(ranking)-1):
         
-        exch_angle = calculate_exchange_ordering_angle([min_angle, max_angle], [i, i+1], columns)
+        exch_angle = calculate_ordering_exchange_angle([min_angle, max_angle], [i, i+1], columns)
         if exch_angle is not None:
             print(f"Angle between {i} and {i+1} is {exch_angle}")
             if exch_angle < angle and exch_angle > min_angle:
@@ -195,28 +195,40 @@ def get_ranking_stability(W1, W2, columns):
     res = (max_angle - min_angle)/ 90
     return {'stability': res}
 
-def calculate_exchange_ordering_angle(region_in_angles, indexes, columns):
-    """Calculates the exchange ordering angle for a pair of players."""
+def calculate_ordering_exchange_angle(region: Tuple[int,int], item_indices: Tuple[int,int], columns: List[str]):
+    """
+    Calculates the ordering exchange angle for a pair of players.
 
-    item_1 = cleaned_df.loc[indexes[0], columns]
-    item_2 = cleaned_df.loc[indexes[1], columns]
+    Parameters:
+        region (Tuple[int, int]): A tuple defining the feasible angle region (theta_min, theta_max).
+        item_indices (Tuple[int, int]): A tuple containing the indices of the two items to compare.
+        columns (List[str]): A list of the column names used to retrieve attributes of the items.
 
-    # check dominance
-    if item_1[columns[0]] >= item_2[columns[0]] and item_1[columns[1]] >= item_2[columns[1]]:
+    Returns:
+        float or None: The exchange angle if it is within the feasible region, otherwise None.
+    """
+
+    # Retrieve the attributes of the two items (players) based on their indices
+    item1 = cleaned_df.loc[item_indices[0], columns]
+    item2 = cleaned_df.loc[item_indices[1], columns]
+
+    # Check for dominance: if item1 dominates item2 in both attributes, return None
+    if item1[columns[0]] >= item2[columns[0]] and item1[columns[1]] >= item2[columns[1]]:
         return None
     
-    angle = compute_first_quadrant_angle(item_1, item_2, columns)
+    angle = compute_first_quadrant_angle(item1, item2, columns)
 
-    # check if angle is within the feasible region
-    if (region_in_angles[0] <= angle) and (angle <= region_in_angles[1]):
-        # print(f"Angle between {indexes[0]} and {indexes[1]} is {angle}")
+    # Check if angle is within the feasible region
+    if (region[0] <= angle) and (angle <= region[1]):
         return angle
     else:
         return None
 
-def compute_first_quadrant_angle(item_1, item_2, columns):
-    delta_x = item_2[columns[0]] - item_1[columns[0]]
-    delta_y = item_2[columns[1]] - item_1[columns[1]]
+def compute_first_quadrant_angle(item1, item2, columns: List[str]):
+    """Computes the angle between two items based on their attributes in the first quadrant."""
+
+    delta_x = item2[columns[0]] - item1[columns[0]]
+    delta_y = item2[columns[1]] - item1[columns[1]]
     
     angle = np.degrees(np.arctan2(delta_y, delta_x))  # Compute angle in degrees
     
@@ -226,17 +238,20 @@ def compute_first_quadrant_angle(item_1, item_2, columns):
     
     if angle > 90:
         angle = 180 - angle if angle <= 180 else angle - 180
-        angle = 90 - angle if angle > 90 else angle  # Keep it within 0-90 range
-    
+        angle = angle - 90 if angle > 90 else angle  # Keep it within 0-90 range
+        
     return angle
     
-def ray_sweeping(region: Tuple[int,int], columns: List[str]) -> pd.DataFrame:
+def compute_raysweeping_heap(region: Tuple[int,int], columns: List[str]) -> pd.DataFrame:
 
+    # Computes the initial order of the dataset items based on U[1] (min angle in given region)
     init_rank = find_ranking(from_angle_to_vector(region[0]), columns)
-    min_heap = []
 
+    min_heap = [] # Contains the ordering exchange angles for each pair of adjacent items in init_rank
+
+    # Calculate ordering exchanges between every adjacent pair of items
     for i in range(len(init_rank)-1):
-        angle = calculate_exchange_ordering_angle(region, [i, i+1], columns)
+        angle = calculate_ordering_exchange_angle(region, [i, i+1], columns)
         if angle is not None:
             heapq.heappush(min_heap, (angle, [i, i+1]))
 
@@ -296,7 +311,12 @@ def randomized_get_next(region_in_angles : list, columns : str, num_of_rankings 
 
     return ranking_list
         
-def find_ranking(weights: list, columns: list) -> pd.DataFrame:
+def find_ranking(weights: Tuple[float, float], columns: List[str]) -> pd.DataFrame:
+    """
+    Computes a ranking for entries in a DataFrame based on weighted scores of specified columns.
+    Returns a DataFrame containing the original data with an additional 'rank' column, and sorted by rank.
+    """
+
     if len(weights) != 2:
         raise ValueError("Invalid number of weights provided")
     
@@ -304,7 +324,11 @@ def find_ranking(weights: list, columns: list) -> pd.DataFrame:
         raise ValueError("Weights should sum to approximately 1")
     
     df_ranked = cleaned_df.copy()
+
+    # Calculate the rank for each entry using the weighted sum of the specified columns
     df_ranked["rank"] = df_ranked[columns[0]]*weights[0] + df_ranked[columns[1]]*weights[1]
+
+    # Sort the DataFrame by the 'rank' column in descending order
     df_ranked = df_ranked.sort_values(by="rank", ascending=False)
     return df_ranked
 

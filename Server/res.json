@@ -4,352 +4,88 @@
             {
                 "user_id": 85851574,
                 "name": "Anish Giri",
-                "rank": 0.9928890947553938,
+                "rank": 0.9913728604105487,
                 "current_rapid_rating": 1.0,
                 "highest_rapid_rating": 0.9386075949367088
             },
             {
                 "user_id": 26824392,
                 "name": "Andrey Gutov",
-                "rank": 0.9895046128888962,
+                "rank": 0.9879414846983342,
                 "current_rapid_rating": 0.9968354430379748,
                 "highest_rapid_rating": 0.9335443037974682
             },
             {
                 "user_id": 11177810,
                 "name": "Fabiano Caruana",
-                "rank": 0.946138202499501,
+                "rank": 0.9476427133829167,
                 "current_rapid_rating": 0.9390822784810128,
                 "highest_rapid_rating": 1.0
             },
             {
                 "user_id": 15448422,
                 "name": "Hikaru Nakamura",
-                "rank": 0.9329410478099096,
+                "rank": 0.9327280715939454,
                 "current_rapid_rating": 0.9339398734177216,
                 "highest_rapid_rating": 0.9253164556962026
             },
             {
                 "user_id": 47485766,
                 "name": "Jan-Krzysztof Duda",
-                "rank": 0.9289790786869077,
+                "rank": 0.9301143005353032,
                 "current_rapid_rating": 0.9236550632911392,
                 "highest_rapid_rating": 0.969620253164557
             }
         ],
         "ranking_function": {
-            "w1": 0.8841728836445576,
-            "w2": 0.11582711635544243
+            "w1": 0.8594754582336805,
+            "w2": 0.14052454176631943
         },
-        "stability": 0.0626015676774696
+        "stability": 0.022102888742202884
     },
     {
         "ranked_list": [
             {
                 "user_id": 85851574,
                 "name": "Anish Giri",
-                "rank": 0.9712805380045332,
+                "rank": 0.9706977185575314,
                 "current_rapid_rating": 1.0,
                 "highest_rapid_rating": 0.9386075949367088
             },
             {
                 "user_id": 11177810,
                 "name": "Fabiano Caruana",
-                "rank": 0.967579682780638,
+                "rank": 0.9681579958917095,
                 "current_rapid_rating": 0.9390822784810128,
                 "highest_rapid_rating": 1.0
             },
             {
                 "user_id": 26824392,
                 "name": "Andrey Gutov",
-                "rank": 0.9672277502591429,
+                "rank": 0.9666269054684193,
                 "current_rapid_rating": 0.9968354430379748,
                 "highest_rapid_rating": 0.9335443037974682
             },
             {
                 "user_id": 47485766,
                 "name": "Jan-Krzysztof Duda",
-                "rank": 0.9451576501717656,
+                "rank": 0.9455940137010286,
                 "current_rapid_rating": 0.9236550632911392,
                 "highest_rapid_rating": 0.969620253164557
             },
             {
                 "user_id": 15448422,
                 "name": "Hikaru Nakamura",
-                "rank": 0.9299058252766057,
+                "rank": 0.9298239601738696,
                 "current_rapid_rating": 0.9339398734177216,
                 "highest_rapid_rating": 0.9253164556962026
             }
         ],
         "ranking_function": {
-            "w1": 0.5321984540944608,
-            "w2": 0.46780154590553913
+            "w1": 0.5227051064010282,
+            "w2": 0.47729489359897176
         },
-        "stability": 0.040413826019014304
-    },
-    {
-        "ranked_list": [
-            {
-                "user_id": 85851574,
-                "name": "Anish Giri",
-                "rank": 0.9890799085331934,
-                "current_rapid_rating": 1.0,
-                "highest_rapid_rating": 0.9386075949367088
-            },
-            {
-                "user_id": 26824392,
-                "name": "Andrey Gutov",
-                "rank": 0.9855776167835351,
-                "current_rapid_rating": 0.9968354430379748,
-                "highest_rapid_rating": 0.9335443037974682
-            },
-            {
-                "user_id": 11177810,
-                "name": "Fabiano Caruana",
-                "rank": 0.9499179362509109,
-                "current_rapid_rating": 0.9390822784810128,
-                "highest_rapid_rating": 1.0
-            },
-            {
-                "user_id": 15448422,
-                "name": "Hikaru Nakamura",
-                "rank": 0.9324059945905541,
-                "current_rapid_rating": 0.9339398734177216,
-                "highest_rapid_rating": 0.9253164556962026
-            },
-            {
-                "user_id": 47485766,
-                "name": "Jan-Krzysztof Duda",
-                "rank": 0.931831059608426,
-                "current_rapid_rating": 0.9236550632911392,
-                "highest_rapid_rating": 0.969620253164557
-            }
-        ],
-        "ranking_function": {
-            "w1": 0.8221263451798524,
-            "w2": 0.17787365482014753
-        },
-        "stability": 0.029771262753688257
-    },
-    {
-        "ranked_list": [
-            {
-                "user_id": 85851574,
-                "name": "Anish Giri",
-                "rank": 0.9789104360562584,
-                "current_rapid_rating": 1.0,
-                "highest_rapid_rating": 0.9386075949367088
-            },
-            {
-                "user_id": 26824392,
-                "name": "Andrey Gutov",
-                "rank": 0.975093624539272,
-                "current_rapid_rating": 0.9968354430379748,
-                "highest_rapid_rating": 0.9335443037974682
-            },
-            {
-                "user_id": 11177810,
-                "name": "Fabiano Caruana",
-                "rank": 0.9600087787860143,
-                "current_rapid_rating": 0.9390822784810128,
-                "highest_rapid_rating": 1.0
-            },
-            {
-                "user_id": 47485766,
-                "name": "Jan-Krzysztof Duda",
-                "rank": 0.9394450589758223,
-                "current_rapid_rating": 0.9236550632911392,
-                "highest_rapid_rating": 0.969620253164557
-            },
-            {
-                "user_id": 15448422,
-                "name": "Hikaru Nakamura",
-                "rank": 0.9309775506472733,
-                "current_rapid_rating": 0.9339398734177216,
-                "highest_rapid_rating": 0.9253164556962026
-            }
-        ],
-        "ranking_function": {
-            "w1": 0.6564792677204954,
-            "w2": 0.34352073227950475
-        },
-        "stability": 0.023488723247804603
-    },
-    {
-        "ranked_list": [
-            {
-                "user_id": 85851574,
-                "name": "Anish Giri",
-                "rank": 0.9867664184521543,
-                "current_rapid_rating": 1.0,
-                "highest_rapid_rating": 0.9386075949367088
-            },
-            {
-                "user_id": 26824392,
-                "name": "Andrey Gutov",
-                "rank": 0.9831925754628761,
-                "current_rapid_rating": 0.9968354430379748,
-                "highest_rapid_rating": 0.9335443037974682
-            },
-            {
-                "user_id": 11177810,
-                "name": "Fabiano Caruana",
-                "rank": 0.952213538522045,
-                "current_rapid_rating": 0.9390822784810128,
-                "highest_rapid_rating": 1.0
-            },
-            {
-                "user_id": 47485766,
-                "name": "Jan-Krzysztof Duda",
-                "rank": 0.9335631958675544,
-                "current_rapid_rating": 0.9236550632911392,
-                "highest_rapid_rating": 0.969620253164557
-            },
-            {
-                "user_id": 15448422,
-                "name": "Hikaru Nakamura",
-                "rank": 0.9320810327106144,
-                "current_rapid_rating": 0.9339398734177216,
-                "highest_rapid_rating": 0.9253164556962026
-            }
-        ],
-        "ranking_function": {
-            "w1": 0.7844426923134421,
-            "w2": 0.2155573076865578
-        },
-        "stability": 0.021406001183130265
-    },
-    {
-        "ranked_list": [
-            {
-                "user_id": 85851574,
-                "name": "Anish Giri",
-                "rank": 0.9812896963540447,
-                "current_rapid_rating": 1.0,
-                "highest_rapid_rating": 0.9386075949367088
-            },
-            {
-                "user_id": 26824392,
-                "name": "Andrey Gutov",
-                "rank": 0.9775464702070931,
-                "current_rapid_rating": 0.9968354430379748,
-                "highest_rapid_rating": 0.9335443037974682
-            },
-            {
-                "user_id": 11177810,
-                "name": "Fabiano Caruana",
-                "rank": 0.9576479148307364,
-                "current_rapid_rating": 0.9390822784810128,
-                "highest_rapid_rating": 1.0
-            },
-            {
-                "user_id": 47485766,
-                "name": "Jan-Krzysztof Duda",
-                "rank": 0.9376636798095672,
-                "current_rapid_rating": 0.9236550632911392,
-                "highest_rapid_rating": 0.969620253164557
-            },
-            {
-                "user_id": 15448422,
-                "name": "Hikaru Nakamura",
-                "rank": 0.9313117508695139,
-                "current_rapid_rating": 0.9339398734177216,
-                "highest_rapid_rating": 0.9253164556962026
-            }
-        ],
-        "ranking_function": {
-            "w1": 0.6952342292720685,
-            "w2": 0.30476577072793154
-        },
-        "stability": 0.01991663194451105
-    },
-    {
-        "ranked_list": [
-            {
-                "user_id": 85851574,
-                "name": "Anish Giri",
-                "rank": 0.9966872136576108,
-                "current_rapid_rating": 1.0,
-                "highest_rapid_rating": 0.9386075949367088
-            },
-            {
-                "user_id": 26824392,
-                "name": "Andrey Gutov",
-                "rank": 0.9934201993860271,
-                "current_rapid_rating": 0.9968354430379748,
-                "highest_rapid_rating": 0.9335443037974682
-            },
-            {
-                "user_id": 11177810,
-                "name": "Fabiano Caruana",
-                "rank": 0.9423694504960122,
-                "current_rapid_rating": 0.9390822784810128,
-                "highest_rapid_rating": 1.0
-            },
-            {
-                "user_id": 15448422,
-                "name": "Hikaru Nakamura",
-                "rank": 0.9334745464701437,
-                "current_rapid_rating": 0.9339398734177216,
-                "highest_rapid_rating": 0.9253164556962026
-            },
-            {
-                "user_id": 55505950,
-                "name": "Aravindh Chithambaram",
-                "rank": 0.9301973650185598,
-                "current_rapid_rating": 0.9335443037974684,
-                "highest_rapid_rating": 0.8715189873417721
-            }
-        ],
-        "ranking_function": {
-            "w1": 0.9460391502992282,
-            "w2": 0.05396084970077167
-        },
-        "stability": 0.016658572479021434
-    },
-    {
-        "ranked_list": [
-            {
-                "user_id": 85851574,
-                "name": "Anish Giri",
-                "rank": 0.9856001739206589,
-                "current_rapid_rating": 1.0,
-                "highest_rapid_rating": 0.9386075949367088
-            },
-            {
-                "user_id": 26824392,
-                "name": "Andrey Gutov",
-                "rank": 0.9819902615128808,
-                "current_rapid_rating": 0.9968354430379748,
-                "highest_rapid_rating": 0.9335443037974682
-            },
-            {
-                "user_id": 11177810,
-                "name": "Fabiano Caruana",
-                "rank": 0.9533707656989157,
-                "current_rapid_rating": 0.9390822784810128,
-                "highest_rapid_rating": 1.0
-            },
-            {
-                "user_id": 47485766,
-                "name": "Jan-Krzysztof Duda",
-                "rank": 0.9344363763737387,
-                "current_rapid_rating": 0.9236550632911392,
-                "highest_rapid_rating": 0.969620253164557
-            },
-            {
-                "user_id": 15448422,
-                "name": "Hikaru Nakamura",
-                "rank": 0.9319172174349275,
-                "current_rapid_rating": 0.9339398734177216,
-                "highest_rapid_rating": 0.9253164556962026
-            }
-        ],
-        "ranking_function": {
-            "w1": 0.7654461319035167,
-            "w2": 0.23455386809648324
-        },
-        "stability": 0.015736852134565677
+        "stability": 0.01631258075578867
     },
     {
         "ranked_list": [
@@ -398,45 +134,309 @@
     {
         "ranked_list": [
             {
+                "user_id": 85851574,
+                "name": "Anish Giri",
+                "rank": 0.9865940985095479,
+                "current_rapid_rating": 1.0,
+                "highest_rapid_rating": 0.9386075949367088
+            },
+            {
+                "user_id": 26824392,
+                "name": "Andrey Gutov",
+                "rank": 0.9830149260375087,
+                "current_rapid_rating": 0.9968354430379748,
+                "highest_rapid_rating": 0.9335443037974682
+            },
+            {
                 "user_id": 11177810,
                 "name": "Fabiano Caruana",
-                "rank": 0.9970334623566378,
+                "rank": 0.9523845260939612,
+                "current_rapid_rating": 0.9390822784810128,
+                "highest_rapid_rating": 1.0
+            },
+            {
+                "user_id": 47485766,
+                "name": "Jan-Krzysztof Duda",
+                "rank": 0.9336922137627277,
+                "current_rapid_rating": 0.9236550632911392,
+                "highest_rapid_rating": 0.969620253164557
+            },
+            {
+                "user_id": 15448422,
+                "name": "Hikaru Nakamura",
+                "rank": 0.9320568279764081,
+                "current_rapid_rating": 0.9339398734177216,
+                "highest_rapid_rating": 0.9253164556962026
+            }
+        ],
+        "ranking_function": {
+            "w1": 0.7816358313926379,
+            "w2": 0.21836416860736205
+        },
+        "stability": 0.013635383340628474
+    },
+    {
+        "ranked_list": [
+            {
+                "user_id": 11177810,
+                "name": "Fabiano Caruana",
+                "rank": 0.9695243361963395,
+                "current_rapid_rating": 0.9390822784810128,
+                "highest_rapid_rating": 1.0
+            },
+            {
+                "user_id": 85851574,
+                "name": "Anish Giri",
+                "rank": 0.9693207314453332,
+                "current_rapid_rating": 1.0,
+                "highest_rapid_rating": 0.9386075949367088
+            },
+            {
+                "user_id": 26824392,
+                "name": "Andrey Gutov",
+                "rank": 0.965207331125947,
+                "current_rapid_rating": 0.9968354430379748,
+                "highest_rapid_rating": 0.9335443037974682
+            },
+            {
+                "user_id": 47485766,
+                "name": "Jan-Krzysztof Duda",
+                "rank": 0.9466249795672494,
+                "current_rapid_rating": 0.9236550632911392,
+                "highest_rapid_rating": 0.969620253164557
+            },
+            {
+                "user_id": 15448422,
+                "name": "Hikaru Nakamura",
+                "rank": 0.9296305431697078,
+                "current_rapid_rating": 0.9339398734177216,
+                "highest_rapid_rating": 0.9253164556962026
+            }
+        ],
+        "ranking_function": {
+            "w1": 0.5002758317899627,
+            "w2": 0.49972416821003734
+        },
+        "stability": 0.01360306050092185
+    },
+    {
+        "ranked_list": [
+            {
+                "user_id": 11177810,
+                "name": "Fabiano Caruana",
+                "rank": 0.9711117273639633,
+                "current_rapid_rating": 0.9390822784810128,
+                "highest_rapid_rating": 1.0
+            },
+            {
+                "user_id": 85851574,
+                "name": "Anish Giri",
+                "rank": 0.9677209709958834,
+                "current_rapid_rating": 1.0,
+                "highest_rapid_rating": 0.9386075949367088
+            },
+            {
+                "user_id": 26824392,
+                "name": "Andrey Gutov",
+                "rank": 0.9635580935491947,
+                "current_rapid_rating": 0.9968354430379748,
+                "highest_rapid_rating": 0.9335443037974682
+            },
+            {
+                "user_id": 47485766,
+                "name": "Jan-Krzysztof Duda",
+                "rank": 0.9478227383573656,
+                "current_rapid_rating": 0.9236550632911392,
+                "highest_rapid_rating": 0.969620253164557
+            },
+            {
+                "user_id": 15448422,
+                "name": "Hikaru Nakamura",
+                "rank": 0.9294058345498752,
+                "current_rapid_rating": 0.9339398734177216,
+                "highest_rapid_rating": 0.9253164556962026
+            }
+        ],
+        "ranking_function": {
+            "w1": 0.47421787807727744,
+            "w2": 0.5257821219227226
+        },
+        "stability": 0.013495368000228245
+    },
+    {
+        "ranked_list": [
+            {
+                "user_id": 11177810,
+                "name": "Fabiano Caruana",
+                "rank": 0.9723555143846352,
+                "current_rapid_rating": 0.9390822784810128,
+                "highest_rapid_rating": 1.0
+            },
+            {
+                "user_id": 85851574,
+                "name": "Anish Giri",
+                "rank": 0.9664674921282972,
+                "current_rapid_rating": 1.0,
+                "highest_rapid_rating": 0.9386075949367088
+            },
+            {
+                "user_id": 26824392,
+                "name": "Andrey Gutov",
+                "rank": 0.9622658472939514,
+                "current_rapid_rating": 0.9968354430379748,
+                "highest_rapid_rating": 0.9335443037974682
+            },
+            {
+                "user_id": 47485766,
+                "name": "Jan-Krzysztof Duda",
+                "rank": 0.9487612322002361,
+                "current_rapid_rating": 0.9236550632911392,
+                "highest_rapid_rating": 0.969620253164557
+            },
+            {
+                "user_id": 15448422,
+                "name": "Hikaru Nakamura",
+                "rank": 0.9292297659975983,
+                "current_rapid_rating": 0.9339398734177216,
+                "highest_rapid_rating": 0.9253164556962026
+            }
+        ],
+        "ranking_function": {
+            "w1": 0.453800387244431,
+            "w2": 0.5461996127555689
+        },
+        "stability": 0.013389822176783323
+    },
+    {
+        "ranked_list": [
+            {
+                "user_id": 11177810,
+                "name": "Fabiano Caruana",
+                "rank": 0.995847997272204,
                 "current_rapid_rating": 0.9390822784810128,
                 "highest_rapid_rating": 1.0
             },
             {
                 "user_id": 33176677,
                 "name": "Daniel Fridman",
-                "rank": 0.9714813747929456,
+                "rank": 0.9694429906737371,
                 "current_rapid_rating": 0.8718354430379747,
                 "highest_rapid_rating": 0.9765822784810124
             },
             {
                 "user_id": 47485766,
                 "name": "Jan-Krzysztof Duda",
-                "rank": 0.96738186567002,
+                "rank": 0.9664873783790381,
                 "current_rapid_rating": 0.9236550632911392,
                 "highest_rapid_rating": 0.969620253164557
             },
             {
                 "user_id": 17860442,
                 "name": "Aleksei Sarana",
-                "rank": 0.9537990027122993,
+                "rank": 0.9525350198105846,
                 "current_rapid_rating": 0.892009493670886,
                 "highest_rapid_rating": 0.9569620253164556
             },
             {
                 "user_id": 69192934,
                 "name": "David Paravyan",
-                "rank": 0.9516701871585113,
+                "rank": 0.9500613416867794,
                 "current_rapid_rating": 0.8730221518987342,
                 "highest_rapid_rating": 0.9556962025316456
             }
         ],
         "ranking_function": {
-            "w1": 0.04869744910661927,
-            "w2": 0.9513025508933807
+            "w1": 0.06815755127187258,
+            "w2": 0.9318424487281274
         },
-        "stability": 0.014353443522105951
+        "stability": 0.012654280699577846
+    },
+    {
+        "ranked_list": [
+            {
+                "user_id": 85851574,
+                "name": "Anish Giri",
+                "rank": 0.9949108294635539,
+                "current_rapid_rating": 1.0,
+                "highest_rapid_rating": 0.9386075949367088
+            },
+            {
+                "user_id": 26824392,
+                "name": "Andrey Gutov",
+                "rank": 0.9915888754746283,
+                "current_rapid_rating": 0.9968354430379748,
+                "highest_rapid_rating": 0.9335443037974682
+            },
+            {
+                "user_id": 11177810,
+                "name": "Fabiano Caruana",
+                "rank": 0.9441320997607336,
+                "current_rapid_rating": 0.9390822784810128,
+                "highest_rapid_rating": 1.0
+            },
+            {
+                "user_id": 15448422,
+                "name": "Hikaru Nakamura",
+                "rank": 0.9332250285872156,
+                "current_rapid_rating": 0.9339398734177216,
+                "highest_rapid_rating": 0.9253164556962026
+            },
+            {
+                "user_id": 55505950,
+                "name": "Aravindh Chithambaram",
+                "rank": 0.9284026675853889,
+                "current_rapid_rating": 0.9335443037974684,
+                "highest_rapid_rating": 0.8715189873417721
+            }
+        ],
+        "ranking_function": {
+            "w1": 0.9171042324991268,
+            "w2": 0.08289576750087319
+        },
+        "stability": 0.011525382987408584
+    },
+    {
+        "ranked_list": [
+            {
+                "user_id": 85851574,
+                "name": "Anish Giri",
+                "rank": 0.9768361078426577,
+                "current_rapid_rating": 1.0,
+                "highest_rapid_rating": 0.9386075949367088
+            },
+            {
+                "user_id": 26824392,
+                "name": "Andrey Gutov",
+                "rank": 0.9729551418448384,
+                "current_rapid_rating": 0.9968354430379748,
+                "highest_rapid_rating": 0.9335443037974682
+            },
+            {
+                "user_id": 11177810,
+                "name": "Fabiano Caruana",
+                "rank": 0.9620670683794064,
+                "current_rapid_rating": 0.9390822784810128,
+                "highest_rapid_rating": 1.0
+            },
+            {
+                "user_id": 47485766,
+                "name": "Jan-Krzysztof Duda",
+                "rank": 0.9409981320326544,
+                "current_rapid_rating": 0.9236550632911392,
+                "highest_rapid_rating": 0.969620253164557
+            },
+            {
+                "user_id": 15448422,
+                "name": "Hikaru Nakamura",
+                "rank": 0.9306861823801567,
+                "current_rapid_rating": 0.9339398734177216,
+                "highest_rapid_rating": 0.9253164556962026
+            }
+        ],
+        "ranking_function": {
+            "w1": 0.6226912411484472,
+            "w2": 0.3773087588515528
+        },
+        "stability": 0.011346122184926304
     }
 ]
