@@ -1,7 +1,7 @@
 ### implementation of the backend services from the paper.
 
 import math
-from typing import List, NamedTuple, Tuple
+from typing import List, Literal, NamedTuple, Tuple, TypedDict
 import numpy as np
 import pandas as pd
 import json
@@ -12,10 +12,7 @@ import hashlib
 
 # ------------------------- Custom Type Definitions -------------------------
 
-class Constraint(NamedTuple):
-    a1: int
-    a2: int
-    op: str  # One of "<=", "<", ">=", ">", "="
+class Constraint: [int, int, str] # [a1, a2, op]
 
 # ------------------------- DataFrame Init -------------------------
 
@@ -40,27 +37,32 @@ def validate_input(columns: list[str], cleaned_df: pd.DataFrame):
         raise ValueError("Columns not found in the data or invalid number of columns provided")
 
 def find_angle(a1: float, a2: float) -> float:
-    """Returns the angle created by the line 'a1*x=a2*y' and the x-axis"""
+    """Returns the angle created by the line 'a1*w1=a2*w2' and the -axis"""
     
     return np.degrees(np.arctan2(a2, a1))
 
 def find_feasible_angle_region(constraints: List[Constraint]) -> (Tuple[int, int] | None):
-    """Finds the intersection of angle constraints given as (a1, a2, op)."""
+    """
+    Returns a tuple (theta_min, theta_max) representing the valid range of angles based on constraints of the form:
+    `a1 * w1 op a2 * w2`, where `op` is a comparison operator (e.g., `<=`, `>=`, `<`, `>`).
+    """
 
+    # Initialize the feasible region to the full range of angles (0° to 90°) in the first quadrant
     theta_min = 0
     theta_max = 90
 
     for a1, a2, op in constraints:
+        # Compute the angle of the line defined by a1 * w1 = a2 * w2
         angle = find_angle(a1, a2)
-        if op == "<=":
+
+        # Update the feasible region based on the constraint operator
+        if op in ("<=", "<"): 
             theta_max = min(theta_max, angle)
-        elif op == ">=":
+        elif op in (">=", ">"):
             theta_min = max(theta_min, angle)
 
-    if theta_min >= theta_max:
-        return None
-
-    return theta_min, theta_max
+    # If the feasible region is empty (min >= max), return None
+    return (theta_min, theta_max) if theta_min < theta_max else None
 
 def from_angle_to_vector(angle) -> List[float]:
     w_1 = math.cos(math.radians(angle))
