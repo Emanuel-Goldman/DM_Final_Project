@@ -9,10 +9,16 @@ import heapq
 from fastapi import FastAPI
 import os
 import hashlib
+from dataclasses import dataclass
 
 # ------------------------- Custom Type Definitions -------------------------
 
 class Constraint: [int, int, str] # [a1, a2, op]
+
+@dataclass
+class Region: 
+    theta_min: float
+    theta_max: float
 
 # ------------------------- DataFrame Init -------------------------
 
@@ -37,12 +43,9 @@ def validate_input(columns: List[str], cleaned_df: pd.DataFrame):
         raise ValueError("Columns not found in the data or invalid number of columns provided")
 
 def find_angle(a1: float, a2: float) -> float:
-    """Returns the angle created by the line 'a1*w1=a2*w2' and the -axis"""
+    """Returns the angle created by the line 'a1*w1=a2*w2' and the w2-axis"""
     
-    return np.degrees(np.arctan2(a2, a1))
-
-    # If the feasible region is empty (min >= max), return None
-    return (theta_min, theta_max) if theta_min < theta_max else None
+    return float(np.degrees(np.arctan2(a2, a1)))
 
 def from_angle_to_vector(angle: float) -> Tuple[float, float]:
     """
@@ -59,16 +62,16 @@ def from_angle_to_vector(angle: float) -> Tuple[float, float]:
     total = w1 + w2
     return [w1 / total, w2 / total]
 
-def compute_feasible_region(constraints: List[Constraint]) -> (Tuple[float, float] | None):
+def compute_interest_region(constraints: List[Constraint]) -> (Region | None):
     """
     Computes and returns a tuple (theta_min, theta_max) representing the valid range of angles 
     based on constraints of the form: `a1 * w1 op a2 * w2`, 
     where `op` is a comparison operator (e.g., `<=`, `>=`, `<`, `>`).
     
-    Raises a ValueError if no feasible region is found due to infeasible constraints.
+    Raises a ValueError if no interest region is found due to infeasible constraints.
     """
 
-    # Initialize the feasible region to the full range of angles (0° to 90°) in the first quadrant
+    # Initialize the interest region to the full range of angles (0° to 90°) in the first quadrant
     theta_min = 0
     theta_max = 90
 
@@ -76,24 +79,28 @@ def compute_feasible_region(constraints: List[Constraint]) -> (Tuple[float, floa
         # Compute the angle of the line defined by a1 * w1 = a2 * w2
         angle = find_angle(a1, a2)
 
+        print(f"The angle for constraint {a1}*w1={a2}*w2 is {angle}") # DEBUG
+
         # Update the feasible region based on the constraint operator
-        if op in ("<=", "<"): 
+        if op in ("<=", "<", "=<"): 
             theta_max = min(theta_max, angle)
-        elif op in (">=", ">"):
+        elif op in (">=", ">", "=>"):
             theta_min = max(theta_min, angle)
 
     # Check if the feasible region is empty (min >= max) and raise an error if so
     if theta_min >= theta_max:
         raise ValueError("No feasible region found - Infeasible constraints")
 
-    # Return the valid region of angles
-    return (theta_min, theta_max)
+    print(f"The interest region is {(theta_min, theta_max)}") # DEBUG
 
-def process_raysweeping(region: Tuple[float, float], columns: List[str], num_of_rankings: int, num_ret_tuples: int):
+    # Return the valid region of angles
+    return Region(theta_min, theta_max)
+
+def process_raysweeping(interest_region: Region, columns: List[str], num_of_rankings: int, num_ret_tuples: int):
     """Processes the ranking using the Ray Sweeping method and returns results."""
 
     # Compute the ranking heap based on the given angle region and columns
-    ranking_heap = compute_raysweeping_heap(region, columns)
+    ranking_heap = compute_raysweeping_heap(interest_region, columns)
     results = []
 
     # Process the specified number of rankings
@@ -101,7 +108,7 @@ def process_raysweeping(region: Tuple[float, float], columns: List[str], num_of_
         # Extract the stability and angle range from the heap
         stability, angle_range_rank = heapq.heappop(ranking_heap)
         stability = -stability
-        angle = np.mean(angle_range_rank) # Compute the average angle of the range
+        angle = np.mean([angle_range_rank.theta_min, angle_range_rank.theta_max]) # Compute the average angle of the range
 
         # Convert the average angle to a ranking function
         ranking_function = from_angle_to_vector(angle)
@@ -117,20 +124,43 @@ def process_raysweeping(region: Tuple[float, float], columns: List[str], num_of_
 
     return results
 
-def process_randomized_rounding(region_in_angles, columns, num_of_rankings, num_ret_tuples, num_of_samples, k_sample):
-    """ Processes the ranking using the Randomized Rounding method and returns results. """
+def process_randomized_rounding(interest_region: Region, columns: List[str], num_of_rankings: int, num_ret_tuples: int, num_of_samples: int, k_sample: int):
+    """Processes the ranking using the Randomized Rounding method and returns results.
+    
+    This function generates rankings by sampling weight vectors from the given 
+    interest region, computing rankings, and formatting the results.
 
+    Args:
+        interest_region (Region): The region defining the range of valid angles.
+        columns (List[str]): The columns used for ranking computations.
+        num_of_rankings (int): The number of rankings to generate.
+        num_ret_tuples (int): The number of top-ranked players to return per ranking.
+        num_of_samples (int): The number of weight function samples to generate.
+        k_sample (int): The number of top players considered for ranking comparisons.
+
+    Returns:
+        List: A list of formatted ranking results with stability scores.
+    """
+
+    # Limit `k_sample` to at most 100
     if k_sample is None or k_sample > 100:
         k_sample = 100
 
-    ranking_list = randomized_get_next(region_in_angles, columns, num_of_rankings, num_ret_tuples, num_of_samples, k_sample)
+    # Generate rankings using randomized sampling from the interest region
+    ranking_list = randomized_get_next(interest_region, columns, num_of_rankings, num_ret_tuples, num_of_samples, k_sample)
+
     results = []
 
     for rank in ranking_list:
         angle, stability = rank
+
+        # Convert the angle to a weight vector
         ranking_function = from_angle_to_vector(angle)
+
+        # Compute the ranking based on the weight vector
         ranking = find_ranking(ranking_function, columns).reset_index(drop=True)
 
+        # Select only the top `num_ret_tuples` players with relevant columns
         final_df = ranking.loc[:num_ret_tuples-1, ["user_id", "name", "rank", columns[0], columns[1]]]
         results.append(format_ranking_output(final_df, ranking_function, stability))
 
@@ -164,13 +194,13 @@ def sort_data(constraints: List[Constraint], algorithm: str, columns: List[str],
     validate_input(columns, cleaned_df)
 
     # Computes the feasible region of ranking functions
-    region = compute_feasible_region(constraints)
+    interest_region = compute_interest_region(constraints)
 
     # Handle sorting based on the selected ranking algorithm
     if algorithm == "raysweeping":
-        results = process_raysweeping(region, columns, num_of_rankings, num_ret_tuples)
+        results = process_raysweeping(interest_region, columns, num_of_rankings, num_ret_tuples)
     elif algorithm == "randomized-rounding":
-        results = process_randomized_rounding(region, columns, num_of_rankings, num_ret_tuples, num_of_samples, k_sample)
+        results = process_randomized_rounding(interest_region, columns, num_of_rankings, num_ret_tuples, num_of_samples, k_sample)
     else:
         raise ValueError(f"Invalid method provided - {algorithm}, choose from 'raysweeping' or 'randomized-rounding'")
     
@@ -205,7 +235,7 @@ def get_ranking_stability(W1, W2, columns):
     res = (max_angle - min_angle)/ 90
     return {'stability': res}
 
-def calculate_ordering_exchange_angle(region: Tuple[int,int], item_indices: Tuple[int,int], columns: List[str]) -> float | None:
+def calculate_ordering_exchange_angle(interest_region: Region, item_indices: Tuple[int,int], columns: List[str]) -> float | None:
     """
     Calculates the ordering exchange angle for a pair of players.
 
@@ -229,7 +259,7 @@ def calculate_ordering_exchange_angle(region: Tuple[int,int], item_indices: Tupl
     angle = compute_first_quadrant_angle(item1, item2, columns)
 
     # Check if angle is within the feasible region
-    if (region[0] <= angle) and (angle <= region[1]):
+    if (interest_region.theta_min <= angle) and (angle <= interest_region.theta_max):
         return angle
     else:
         return None
@@ -250,38 +280,39 @@ def compute_first_quadrant_angle(item1, item2, columns: List[str]):
         angle = 180 - angle if angle <= 180 else angle - 180
         angle = angle - 90 if angle > 90 else angle  # Keep it within 0-90 range
         
-    return angle
+    return float(angle)
     
-def compute_raysweeping_heap(region: Tuple[float,float], columns: List[str]) -> List[Tuple[float, Tuple[float, float]]]:
+def compute_raysweeping_heap(interest_region: Region, columns: List[str]) -> List[Tuple[float, Region]]:
     """
     Computes the raysweeping heap of ranking regions based on the given angle region and columns.
 
     Args:
-        region (Tuple[float, float]): A tuple representing the angle region (min_theta, max_theta).
+        region (Region): A tuple representing the angle region (min_theta, max_theta).
         columns (List[str]): A list of column names used for ranking.
 
     Returns:
-        List[Tuple[float, Tuple[float, float]]]: A max heap containing ranking regions and their stability.
+        List[Tuple[float, Region]: A max heap containing ranking regions and their stability.
     """
+    print(f"Interest region: {interest_region}")
 
     # Find the initial ranking based on the minimum angle in the given region
-    init_rank = find_ranking(from_angle_to_vector(region[0]), columns)
+    init_rank = find_ranking(from_angle_to_vector(interest_region.theta_min), columns)
 
     min_heap = [] # Heap to store ordering exchange angles for adjacent item pairs
 
     # Calculate ordering exchange angles for each adjacent pair of items
     for i in range(len(init_rank)-1):
-        angle = calculate_ordering_exchange_angle(region, [i, i+1], columns)
+        angle = calculate_ordering_exchange_angle(interest_region, [i, i+1], columns)
         if angle is not None:
             # Add valid angles to the min heap with their corresponding indices
             heapq.heappush(min_heap, (angle, [i, i+1]))
 
-    old_angle = float(region[0])  # Convert to Python float
+    old_angle = interest_region.theta_min 
     
     max_heap = [] # Max heap to store ranking regions and their stability
 
     # Calculate the range area of the angle region
-    range_area = float(region[1]) - old_angle 
+    range_area = interest_region.theta_max - old_angle 
 
     # Process the min heap to calculate stability for each angle
     while len(min_heap) > 0:
@@ -290,50 +321,67 @@ def compute_raysweeping_heap(region: Tuple[float,float], columns: List[str]) -> 
         index_1, index_2 = indices
 
         # Calculate stability and store it in the max heap
-        stability = (float(angle) - old_angle) / range_area  
-        heapq.heappush(max_heap, (-stability, [old_angle, float(angle)]))  
+        stability = (angle - old_angle) / range_area  
+        heapq.heappush(max_heap, (-stability, Region(old_angle, angle)))  
 
-        old_angle = float(angle)  
+        old_angle = angle  
     
     return max_heap
 
-def generate_randomized_angles(region_in_angles : list, num_of_smaples : int) -> list:
+def generate_randomized_angles(interest_region: Region, num_of_smaples : int) -> List[float]:
     res  = []
-    for i in range(num_of_smaples):
-        angle = np.random.uniform(region_in_angles[0], region_in_angles[1])
+    for _ in range(num_of_smaples):
+        angle = float(np.random.uniform(interest_region.theta_min, interest_region.theta_max))
         res.append(angle)
     
     return res
 
-def randomized_get_next(region_in_angles : list, columns : str, num_of_rankings : int, num_ret_tuples : int, num_of_smaples : int, k_sample : int) -> list:
-    
-    samples = generate_randomized_angles(region_in_angles, num_of_smaples)
-    ranking_counts = {}
-    ranking_angles = {}
+def randomized_get_next(interest_region: Region, columns: List[str], num_of_rankings: int, num_ret_tuples: int, num_of_samples: int, k_sample: int) -> List[Tuple[float, float]]:
+    """
+    Randomly samples weight vectors within the given interest_region, 
+    computes rankings based on those vectors, 
+    and returns a list of the most frequently occurring rankings along with their associated stability scores.
+    """
 
+    # Draws `num_of_samples` samples from the interest region
+    samples = generate_randomized_angles(interest_region, num_of_samples)
+
+    ranking_counts = {} # Dict with ranking_id as key and the number of times it was samples as value
+    ranking_angles = {} # Dict with ranking_id as key and angle created by it's weight vector as value
+
+    # Compute ranking for each sampled weight vector
     for sample in samples:
+        # Computes the ranking of the items that corresponds to the sampled weight function
         ranking = find_ranking(from_angle_to_vector(sample), columns)
+
+        # Extract top `k_sample` users from ranking
         ranking = ranking.iloc[:k_sample]['user_id']
+
+        # Generate a unique ID for this ranking
         ranking_id = generate_ranking_id(ranking)
 
         ranking_angles[ranking_id] = sample
 
-        # Update ranking occurrence count
+        # Checks if the ranking was previously discovered, and sets it's counter accordingly
         if ranking_id in ranking_counts:
             ranking_counts[ranking_id] += 1
         else:
             ranking_counts[ranking_id] = 1
 
     ranking_list = []
+
+    # If not specified, return all discovered rankings
     if num_of_rankings == None:
         num_of_rankings = len(ranking_counts)
-    for i in range(num_of_rankings):
+
+    for _ in range(num_of_rankings):
         try:
-            max_ranking = max(ranking_counts, key=ranking_counts.get)
+            max_ranking = max(ranking_counts, key=ranking_counts.get) # Find the most frequent ranking
         except ValueError:
-            break
+            break # No more rankings left
+
         angle = ranking_angles[max_ranking]
-        stability = ranking_counts[max_ranking] / num_of_smaples
+        stability = ranking_counts[max_ranking] / num_of_samples
         rank = [angle, stability]
         ranking_list.append(rank)
         del ranking_counts[max_ranking]
