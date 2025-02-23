@@ -30,7 +30,7 @@ def generate_ranking_id(ranking):
     ranking_str = ",".join(map(str, ranking))  # Convert to string
     return hashlib.md5(ranking_str.encode()).hexdigest()  # Hash it
 
-def validate_input(columns: list[str], cleaned_df: pd.DataFrame):
+def validate_input(columns: List[str], cleaned_df: pd.DataFrame):
     """ Validates input columns to ensure they exist in the dataset and are exactly two. """
 
     if len(columns) != 2 or not all(col in cleaned_df.columns for col in columns):
@@ -44,7 +44,7 @@ def find_angle(a1: float, a2: float) -> float:
     # If the feasible region is empty (min >= max), return None
     return (theta_min, theta_max) if theta_min < theta_max else None
 
-def from_angle_to_vector(angle: int) -> Tuple[float, float]:
+def from_angle_to_vector(angle: float) -> Tuple[float, float]:
     """
     Converts an angle in degrees to a 2D vector on the unit circle.
 
@@ -59,7 +59,7 @@ def from_angle_to_vector(angle: int) -> Tuple[float, float]:
     total = w1 + w2
     return [w1 / total, w2 / total]
 
-def compute_feasible_region(constraints: List[Constraint]) -> (Tuple[int, int] | None):
+def compute_feasible_region(constraints: List[Constraint]) -> (Tuple[float, float] | None):
     """
     Computes and returns a tuple (theta_min, theta_max) representing the valid range of angles 
     based on constraints of the form: `a1 * w1 op a2 * w2`, 
@@ -89,20 +89,30 @@ def compute_feasible_region(constraints: List[Constraint]) -> (Tuple[int, int] |
     # Return the valid region of angles
     return (theta_min, theta_max)
 
-def process_raysweeping(region_in_angles, columns, num_of_rankings, num_ret_tuples):
+def process_raysweeping(region: Tuple[float, float], columns: List[str], num_of_rankings: int, num_ret_tuples: int):
     """Processes the ranking using the Ray Sweeping method and returns results."""
 
-    ranking_heap = compute_raysweeping_heap(region_in_angles, columns)
+    # Compute the ranking heap based on the given angle region and columns
+    ranking_heap = compute_raysweeping_heap(region, columns)
     results = []
 
+    # Process the specified number of rankings
     for _ in range(num_of_rankings):
+        # Extract the stability and angle range from the heap
         stability, angle_range_rank = heapq.heappop(ranking_heap)
         stability = -stability
-        angle = np.mean(angle_range_rank)
+        angle = np.mean(angle_range_rank) # Compute the average angle of the range
+
+        # Convert the average angle to a ranking function
         ranking_function = from_angle_to_vector(angle)
+
+        # Find the ranking based on the calculated ranking function
         ranking = find_ranking(ranking_function, columns).reset_index(drop=True)
 
+        # Select the top results based on the specified number of return tuples
         final_df = ranking.loc[:num_ret_tuples-1, ["user_id", "name", "rank", columns[0], columns[1]]]
+
+        # Format the ranking output and add it to the results list
         results.append(format_ranking_output(final_df, ranking_function, stability))
 
     return results
@@ -126,8 +136,8 @@ def process_randomized_rounding(region_in_angles, columns, num_of_rankings, num_
 
     return results
 
-def format_ranking_output(final_df, ranking_function, stability):
-    """ Formats ranking output into dictionary format. """
+def format_ranking_output(final_df: pd.DataFrame, ranking_function: Tuple[float, float], stability: float):
+    """Formats ranking output into dictionary format."""
 
     return {
         "ranked_list": final_df.to_dict(orient="records"),
@@ -282,7 +292,7 @@ def compute_raysweeping_heap(region: Tuple[float,float], columns: List[str]) -> 
         # Calculate stability and store it in the max heap
         stability = (float(angle) - old_angle) / range_area  
         heapq.heappush(max_heap, (-stability, [old_angle, float(angle)]))  
-        
+
         old_angle = float(angle)  
     
     return max_heap
