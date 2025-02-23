@@ -195,7 +195,7 @@ def get_ranking_stability(W1, W2, columns):
     res = (max_angle - min_angle)/ 90
     return {'stability': res}
 
-def calculate_ordering_exchange_angle(region: Tuple[int,int], item_indices: Tuple[int,int], columns: List[str]):
+def calculate_ordering_exchange_angle(region: Tuple[int,int], item_indices: Tuple[int,int], columns: List[str]) -> float | None:
     """
     Calculates the ordering exchange angle for a pair of players.
 
@@ -242,29 +242,48 @@ def compute_first_quadrant_angle(item1, item2, columns: List[str]):
         
     return angle
     
-def compute_raysweeping_heap(region: Tuple[int,int], columns: List[str]) -> pd.DataFrame:
+def compute_raysweeping_heap(region: Tuple[float,float], columns: List[str]) -> List[Tuple[float, Tuple[float, float]]]:
+    """
+    Computes the raysweeping heap of ranking regions based on the given angle region and columns.
 
-    # Computes the initial order of the dataset items based on U[1] (min angle in given region)
+    Args:
+        region (Tuple[float, float]): A tuple representing the angle region (min_theta, max_theta).
+        columns (List[str]): A list of column names used for ranking.
+
+    Returns:
+        List[Tuple[float, Tuple[float, float]]]: A max heap containing ranking regions and their stability.
+    """
+
+    # Find the initial ranking based on the minimum angle in the given region
     init_rank = find_ranking(from_angle_to_vector(region[0]), columns)
 
-    min_heap = [] # Contains the ordering exchange angles for each pair of adjacent items in init_rank
+    min_heap = [] # Heap to store ordering exchange angles for adjacent item pairs
 
-    # Calculate ordering exchanges between every adjacent pair of items
+    # Calculate ordering exchange angles for each adjacent pair of items
     for i in range(len(init_rank)-1):
         angle = calculate_ordering_exchange_angle(region, [i, i+1], columns)
         if angle is not None:
+            # Add valid angles to the min heap with their corresponding indices
             heapq.heappush(min_heap, (angle, [i, i+1]))
 
     old_angle = float(region[0])  # Convert to Python float
-    max_heap = []
-    range_area = float(region[1]) - old_angle  # Ensure subtraction is between Python floats
+    
+    max_heap = [] # Max heap to store ranking regions and their stability
 
+    # Calculate the range area of the angle region
+    range_area = float(region[1]) - old_angle 
+
+    # Process the min heap to calculate stability for each angle
     while len(min_heap) > 0:
-        angle, indexes = heapq.heappop(min_heap)
-        index_1, index_2 = indexes
-        stability = (float(angle) - old_angle) / range_area  # Convert angle to float
-        heapq.heappush(max_heap, (-stability, [old_angle, float(angle)]))  # Convert angle to float
-        old_angle = float(angle)  # Ensure old_angle remains a Python float
+        # Get the smallest angle and its indices
+        angle, indices = heapq.heappop(min_heap)
+        index_1, index_2 = indices
+
+        # Calculate stability and store it in the max heap
+        stability = (float(angle) - old_angle) / range_area  
+        heapq.heappush(max_heap, (-stability, [old_angle, float(angle)]))  
+        
+        old_angle = float(angle)  
     
     return max_heap
 
