@@ -18,8 +18,9 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
-@app.get("/")  # Test route to check if API is working
+@app.get("/")
 def read_root():
+    """Test route to check if API is working"""
     return {"message": "API is running"}
 
 

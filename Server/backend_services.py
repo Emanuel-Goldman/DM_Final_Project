@@ -1,6 +1,7 @@
 ### implementation of the backend services from the paper.
 
 import math
+from typing import List, NamedTuple, Tuple
 import numpy as np
 import pandas as pd
 import json
@@ -9,11 +10,22 @@ from fastapi import FastAPI
 import os
 import hashlib
 
+# ------------------------- Custom Type Definitions -------------------------
+
+class Constraint(NamedTuple):
+    a1: int
+    a2: int
+    op: str  # One of "<=", "<", ">=", ">", "="
+
+# ------------------------- DataFrame Init -------------------------
+
 cleaned_file_path = os.path.join(os.path.dirname(__file__), "Data", "GM_players_statistics_cleaned.csv")
 cleaned_df = pd.read_csv(cleaned_file_path)
 
 original_file_path = os.path.join(os.path.dirname(__file__), "Data", "GM_players_statistics.csv")
 original_df = pd.read_csv(original_file_path)
+
+# ------------------------- Backend Services Implementation -------------------------
 
 def generate_ranking_id(ranking):
     """Generates a unique ID for a ranking by hashing the tuple."""
@@ -21,13 +33,46 @@ def generate_ranking_id(ranking):
     ranking_str = ",".join(map(str, ranking))  # Convert to string
     return hashlib.md5(ranking_str.encode()).hexdigest()  # Hash it
 
-def validate_input(columns, cleaned_df):
+def validate_input(columns: list[str], cleaned_df: pd.DataFrame):
     """ Validates input columns to ensure they exist in the dataset and are exactly two. """
+
     if len(columns) != 2 or not all(col in cleaned_df.columns for col in columns):
         raise ValueError("Columns not found in the data or invalid number of columns provided")
 
-def compute_feasible_region(constraints):
+def find_angle(a1: float, a2: float) -> float:
+    """Returns the angle created by the line 'a1*x=a2*y' and the x-axis"""
+    
+    return np.degrees(np.arctan2(a2, a1))
+
+def find_feasible_angle_region(constraints: List[Constraint]) -> (Tuple[int, int] | None):
+    """Finds the intersection of angle constraints given as (a1, a2, op)."""
+
+    theta_min = 0
+    theta_max = 90
+
+    for a1, a2, op in constraints:
+        angle = find_angle(a1, a2)
+        if op == "<=":
+            theta_max = min(theta_max, angle)
+        elif op == ">=":
+            theta_min = max(theta_min, angle)
+
+    if theta_min >= theta_max:
+        return None
+
+    return theta_min, theta_max
+
+def from_angle_to_vector(angle) -> List[float]:
+    w_1 = math.cos(math.radians(angle))
+    w_2 = math.sin(math.radians(angle))
+    
+    # Normalize to make sure w_1 + w_2 = 1
+    total = w_1 + w_2
+    return [w_1 / total, w_2 / total]
+
+def compute_feasible_region(constraints: List[Constraint]) -> (Tuple[int, int] | None):
     """ Computes the feasible angle region based on constraints. Raises an error if infeasible. """
+
     if constraints:
         region_in_angles = find_feasible_angle_region(constraints)
         if region_in_angles is None:
@@ -37,6 +82,7 @@ def compute_feasible_region(constraints):
 
 def process_ray_sweeping(region_in_angles, columns, num_of_rankings, num_ret_tuples):
     """ Processes the ranking using the Ray Sweeping method and returns results. """
+
     ranking_heap = ray_sweeping(region_in_angles, columns)
     results = []
 
@@ -54,6 +100,7 @@ def process_ray_sweeping(region_in_angles, columns, num_of_rankings, num_ret_tup
 
 def process_randomized_rounding(region_in_angles, columns, num_of_rankings, num_ret_tuples, num_of_samples, k_sample):
     """ Processes the ranking using the Randomized Rounding method and returns results. """
+
     if k_sample is None or k_sample > 100:
         k_sample = 100
 
@@ -72,6 +119,7 @@ def process_randomized_rounding(region_in_angles, columns, num_of_rankings, num_
 
 def format_ranking_output(final_df, ranking_function, stability):
     """ Formats ranking output into dictionary format. """
+
     return {
         "ranked_list": final_df.to_dict(orient="records"),
         "ranking_function": {"w1": ranking_function[0], "w2": ranking_function[1]},
@@ -80,10 +128,11 @@ def format_ranking_output(final_df, ranking_function, stability):
 
 def save_results_to_json(results, filename="res.json"):
     """ Saves results to a JSON file. """
+
     with open(filename, "w") as file:
         json.dump(results, file, indent=4)
 
-def sort_data(constraints: list, method: str, columns: list, num_ret_tuples: int, num_of_rankings : int, num_of_samples : int = None, k_sample=None) -> tuple[pd.DataFrame, float]:
+def sort_data(constraints: list, method: str, columns: list[str], num_ret_tuples: int, num_of_rankings: int, num_of_samples: int = None, k_sample: int = None) -> tuple[pd.DataFrame, float]:
     """
     Sorts the data based on the constraints and method provided.
 
@@ -145,16 +194,13 @@ def get_ranking_stability(W1, W2, columns):
     return {'stability': res}
 
 def calculate_exchange_ordering_angle(region_in_angles, indexes, columns):
-    """
-    Calculates the exchange ordering angle for a pair of players.
-    """
+    """Calculates the exchange ordering angle for a pair of players."""
+
     item_1 = cleaned_df.loc[indexes[0], columns]
     item_2 = cleaned_df.loc[indexes[1], columns]
 
     # check dominance
     if item_1[columns[0]] >= item_2[columns[0]] and item_1[columns[1]] >= item_2[columns[1]]:
-        # print(f"player {indexes[0]} dominates player {indexes[1]}")
-        # print(f"values: {float(item_1[columns[0]]), float(item_1[columns[1]])} >= {float(item_2[columns[0]]), float(item_2[columns[1]])}")
         return None
     
     angle = compute_first_quadrant_angle(item_1, item_2, columns)
@@ -163,10 +209,7 @@ def calculate_exchange_ordering_angle(region_in_angles, indexes, columns):
     if (region_in_angles[0] <= angle) and (angle <= region_in_angles[1]):
         # print(f"Angle between {indexes[0]} and {indexes[1]} is {angle}")
         return angle
-    
     else:
-        # print(f"Angle between {indexes[0]} and {indexes[1]} is {angle} outside the feasible region")
-        # print(f"values: {float(item_1[columns[0]]), float(item_1[columns[1]])} and {float(item_2[columns[0]]), float(item_2[columns[1]])}")
         return None
 
 def compute_first_quadrant_angle(item_1, item_2, columns):
@@ -187,8 +230,6 @@ def compute_first_quadrant_angle(item_1, item_2, columns):
     
 def ray_sweeping(region_in_angles : list, columns : str) -> pd.DataFrame:
 
-    # print(f"range is between {region_in_angles[0]} and {region_in_angles[1]}")
-
     init_rank = find_ranking(from_angle_to_vector(region_in_angles[0]), columns)
     min_heap = []
 
@@ -207,10 +248,6 @@ def ray_sweeping(region_in_angles : list, columns : str) -> pd.DataFrame:
         stability = (float(angle) - old_angle) / range_area  # Convert angle to float
         heapq.heappush(max_heap, (-stability, [old_angle, float(angle)]))  # Convert angle to float
         old_angle = float(angle)  # Ensure old_angle remains a Python float
-
-    # while len(max_heap) > 0:
-    #     stability, angle_range_rank = heapq.heappop(max_heap)
-    #     print(f"Stability: {-stability} for range {angle_range_rank}")
     
     return max_heap
 
@@ -241,14 +278,6 @@ def randomized_get_next(region_in_angles : list, columns : str, num_of_rankings 
         else:
             ranking_counts[ranking_id] = 1
 
-    # # print the ranking counts
-    # for ranking_id, count in ranking_counts.items():
-    #     print(f"Ranking {ranking_id} occurs {count} times")
-
-    # # print the ranking angles
-    # for ranking_id, angle in ranking_angles.items():
-    #     print(f"Ranking {ranking_id} has angle {angle}")
-
     ranking_list = []
     if num_of_rankings == None:
         num_of_rankings = len(ranking_counts)
@@ -263,86 +292,27 @@ def randomized_get_next(region_in_angles : list, columns : str, num_of_rankings 
         ranking_list.append(rank)
         del ranking_counts[max_ranking]
 
-    #print the ranking list
-    # for rank in ranking_list:
-    #     print(f"Ranking {rank[0]} has stability {rank[1]}")
-
     return ranking_list
         
-def find_ranking(waights: list, columns: list) -> pd.DataFrame:
-    if len(waights) != 2:
+def find_ranking(weights: list, columns: list) -> pd.DataFrame:
+    if len(weights) != 2:
         raise ValueError("Invalid number of weights provided")
     
-    if not math.isclose(waights[0] + waights[1], 1, rel_tol=1e-6):
+    if not math.isclose(weights[0] + weights[1], 1, rel_tol=1e-6):
         raise ValueError("Weights should sum to approximately 1")
     
     df_ranked = cleaned_df.copy()
-    df_ranked["rank"] = df_ranked[columns[0]]*waights[0] + df_ranked[columns[1]]*waights[1]
+    df_ranked["rank"] = df_ranked[columns[0]]*weights[0] + df_ranked[columns[1]]*weights[1]
     df_ranked = df_ranked.sort_values(by="rank", ascending=False)
     return df_ranked
 
-# def find_angle(a, b):
-#     return np.degrees(np.arctan2(b, a))
+def get_columns_names() -> list[str]:
+    """Returns a list of column names in the cleaned DataFrame"""
 
-def find_angle(W1, W2):
-    print(f"DEBUG: Inside find_angle, W1={W1}, W2={W2}, Type(W1)={type(W1)}, Type(W2)={type(W2)}")
-
-    assert isinstance(W1, (int, float)), f"Error: W1 is {type(W1)}, expected int/float"
-    assert isinstance(W2, (int, float)), f"Error: W2 is {type(W2)}, expected int/float"
-
-    W1 = float(W1)  # Explicit conversion
-    W2 = float(W2)
-
-    return np.degrees(np.arctan2(W2, W1))
-
-def find_feasible_angle_region(constraints):
-    """
-    Finds the intersection of angle constraints given as (a, b, sign).
-    """
-
-    theta_min = 0
-    theta_max = 90
-
-    for a, b, sign in constraints:
-        angle = find_angle(a, b)
-        if sign == "<=":
-            theta_max = min(theta_max, angle)
-        elif sign == ">=":
-            theta_min = max(theta_min, angle)
-
-    if theta_min >= theta_max:
-        return None
-
-    return theta_min, theta_max
-
-def from_angle_to_vector(angle):
-    w_1 = math.cos(math.radians(angle))
-    w_2 = math.sin(math.radians(angle))
-    
-    # Normalize to make sure w_1 + w_2 = 1
-    total = w_1 + w_2
-    return [w_1 / total, w_2 / total]
-
-def get_columns_names():
     return cleaned_df.columns.tolist()
 
 def sample_first_five_entries():
-    """
-    Returns the first five entries from the dataset.
-    """
+    """Returns the first five entries from the dataset."""
     
     return original_df.head(5).replace({np.nan: None}).to_dict(orient="records")
-
-# def main():
-
-    # res = sort_data([(1,2,"<="),(1, 1, ">=")], "Randomized Rounding", ["followers", "bullet_win"], num_of_rankings=2, num_ret_tuples=3, num_of_smaples=9000, k_sample=40)
-    # print(res)
-
-    # print(f"Stability score: {res[1]}")
-    # stability = get_ranking_stability(0.25, 0.75, ["followers", "bullet_win"])
-    # print(f"Stability score: {stability}")
-
-
-# if __name__ == "__main__":
-    # main()
 
