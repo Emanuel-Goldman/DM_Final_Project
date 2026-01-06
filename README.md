@@ -1,4 +1,4 @@
-# Data Management Final Project 
+# Data Management Final Project - StableRank
 
 ## Introduction 
 This project provides a backend API for ranking data using a **FastAPI** server. The API allows sorting data based on various ranking methods and retrieving ranking stability. 
